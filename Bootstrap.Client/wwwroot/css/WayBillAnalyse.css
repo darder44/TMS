@@ -1,0 +1,20 @@
+﻿.card .card-body {
+    padding-bottom: 15px;
+}
+
+.spark {
+    position: absolute;
+}
+
+.loading {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 178px;
+    width: 100%;
+}
+
+    .loading span {
+        margin-left: 10px;
+    }

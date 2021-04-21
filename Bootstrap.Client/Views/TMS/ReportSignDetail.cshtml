@@ -1,0 +1,127 @@
+@model NormalModel
+@{
+ViewBag.Title = "簽單明細報表";
+Layout = "_Bestlog";
+}
+@section css {
+}
+@section javascript {
+<script src="~/js/reportsigndetail.js" asp-append-version="true"></script>
+}
+
+@section modal {
+}
+
+@section query {
+<form class="form-inline">
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_storerkey">貨主</label>
+            <select id="sel_storerkey" multiple="multiple">
+                <optgroup label="貨主">                    
+                    @foreach (var StorerKey in @Model.StorerKeys)
+                    {
+                        <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_ordertypes">訂單類別</label>
+            <select id="sel_ordertypes" multiple="multiple">                
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_RouteNo">路線編號</label>
+            <input type="text" class="form-control" id="txt_RouteNo" maxlength="11" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_VehicleKey">車號</label>
+            <input type="text" class="form-control" id="txt_VehicleKey" maxlength="11" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ConsigneeKey">客戶編號</label>
+            <input type="text" class="form-control" id="txt_ConsigneeKey" maxlength="20" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_TMSKey">訂單號碼</label>
+            <input type="text" class="form-control" id="txt_TMSKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ExternOrderKey">貨主單號</label>
+            <input type="text" class="form-control" id="txt_ExternOrderKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_Sku">品號</label>
+            <input type="text" class="form-control" id="txt_Sku" maxlength="20" data-default-val="" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_OrderDate_Start">訂單日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_Start" class="form-control" size="16" type="text" value="" readonly data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_OrderDate_End">訂單日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_End" class="form-control" size="16" type="text" value="" readonly data-default-val="">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DoRouteDate_Start">出車日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DoRouteDate_Start" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DoRouteDate_End">出車日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DoRouteDate_End" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DeliveryDate_Start">到貨日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_Start" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DeliveryDate_End">到貨日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_End" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+            </div>
+        </div>
+    </div>
+
+
+</form>
+}
+
+@section gear{
+<a id="tb_export" href="#" title="匯出資料" asp-auth="ReportSignDetail"><i class="fa fa-download"></i></a>
+}
+
+@section toolbar{
+<button id="btn_export" type="button" class="btn btn-warning" asp-auth="ReportSignDetail"><i class="fa fa-download" aria-hidden="true"></i><span>匯出資料</span></button>
+}
+
+@section card{
+<div class="card">
+    <div class="card-header">
+        簽單明細報表
+    </div>
+    <div class="card-body">
+        <table id="reportsigndetail-table"></table>
+    </div>
+</div>
+}
+
+@section tableButtons{
+}

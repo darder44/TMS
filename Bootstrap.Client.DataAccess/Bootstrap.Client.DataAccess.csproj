@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Bootstrap.Security.DataAccess" Version="3.1.1"/>
+    <PackageReference Include="Bootstrap.Security.Mvc" Version="3.1.2"/>
+    <PackageReference Include="Longbow" Version="3.1.0"/>
+    <PackageReference Include="Longbow.Cache" Version="3.1.4"/>
+    <PackageReference Include="Longbow.Data" Version="3.1.0"/>
+    <PackageReference Include="Longbow.Web" Version="3.1.1"/>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1"/>
+    <PackageReference Include="ExcelDataReader" Version="3.6.0"/>
+    <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0"/>
+    <PackageReference Include="NPOI" Version="2.5.1"/>
+    <PackageReference Include="PetaPoco.Extensions" Version="3.1.0"/>
+    <PackageReference Include="Longbow.Tasks" Version="3.1.1"/>
+  </ItemGroup>
+</Project>

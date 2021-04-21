@@ -1,0 +1,215 @@
+<div id="ShippingCost" class="tab-content-item">
+    <div class="card">
+        <div class="card-header">
+            路編資料
+        </div>
+        <div class="card-body">
+            <table id="signorder-table"></table>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            彙總資料
+        </div>
+        <div class="card-body">
+            <table id="signorderdata-table"></table>
+        </div>
+    </div>
+    <div id="ShippingCostDetailCard" class="card" data-toggle="LgbValidate"
+        data-valid-button=".valid-detail-button-cost" data-valid-modal="#dialogSignOrders">
+        <div class="card-header">
+            計費維護
+        </div>
+        <div class="card-body">
+            <form class="form-inline">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="RouteNo_signdetail">路線編號</label>
+                        <input type="text" class="form-control" id="RouteNo_signdetail" readonly />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="TMSKey_signdetail">訂單號碼</label>
+                        <input type="text" class="form-control" id="TMSKey_signdetail" readonly />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="StorerKey_signdetail">貨主</label>
+                        <input type="text" class="form-control" id="StorerKey_signdetail" readonly />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="ExternOrderKey_signdetail">貨主單號</label>
+                        <input type="text" class="form-control" id="ExternOrderKey_signdetail" readonly />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="CostKind">計費類別</label>
+                        <div class="input-group input-append" style="width: 60%;">
+                            <select class="form-control" data-valid="true" id="CostKind" title="請輸入計費類別"></select>
+                            <div class="input-group-append input-group-addon">
+                                <div class="input-group-text" id="RefreshCostCode" style="cursor: pointer;">
+                                    <span class="fa fa-refresh"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="CostCode">計費代碼</label>
+                        <select class="form-control" style="width: 60%;" data-valid="true" id="CostCode"
+                            title="請輸入計費代碼"></select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Uom">單位</label>
+                        <input type="text" class="form-control" id="Uom" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="ChargeQty">計費數量</label>
+                        <input type="number" class="form-control" id="ChargeQty" min="0" data-valid="true"
+                            title="請輸入計費數量" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Receivable">應收單價</label>
+                        <input type="number" class="form-control" id="Receivable" min="0" data-default-val="0"
+                            data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="number">應付單價</label>
+                        <input type="text" class="form-control" id="Payable" min="0" data-default-val="0"
+                            data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Reason">原因</label>
+                        <input type="text" class="form-control" id="Reason" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Premium">議價</label>
+                        <input type="number" class="form-control" id="Premium" min="0" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="SumReceivable">應收總價</label>
+                        <input type="number" class="form-control" id="SumReceivable" min="0" data-default-val="0"
+                            data-valid="true" title="請輸入應收總價" CheckSumReceivable="#SumReceivable" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="SumPayable">應付總價</label>
+                        <input type="number" class="form-control" id="SumPayable" min="0" data-default-val="0"
+                            data-valid="true" title="請輸入應付總價" CheckSumPayable="#SumPayable" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="AreaStart">起點</label>
+                        <input type="text" class="form-control" id="AreaStart" data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="AreaEnd">迄點</label>
+                        <input type="text" class="form-control" id="AreaEnd" data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="STDReceivable">標準應收</label>
+                        <input type="number" class="form-control" id="STDReceivable" min="0" data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="STDPayable">標準應付</label>
+                        <input type="number" class="form-control" id="STDPayable" min="0" data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label class="control-label" for="VehicleKey">車號</label>
+                        <div class="input-group input-append">
+                            <select class="form-control" data-valid="true" id="VehicleKey"></select>
+                            <div class="input-group-append input-group-addon">
+                                <div class="input-group-text" id="RefreshVehicleKey" style="cursor: pointer;">
+                                    <span class="fa fa-refresh"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Driver">司機</label>
+                        <select class="form-control " data-valid="true" id="Driver"></select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label class="control-label" for="Receiver">請款人</label>
+                        <select class="form-control " data-valid="true" id="Receiver"></select>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="Notes">備註</label>
+                        <textarea id="Notes" class="form-control mt-2" style="width: 100%;" placeholder="100字以內"
+                            rows="1" maxlength="100"></textarea>
+                    </div>
+                </div>
+            </form>
+            <form class="form-inline">
+                <div class="row">
+                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                        <button type="button" id="btn_signdetailadd"
+                            class="btn btn-primary btn-fill valid-detail-button-cost">
+                            <i class="fa fa-plus" aria-hidden="true"></i><span>新增</span></button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                        <button type="button" id="btn_CancelUpdate_cost" class="btn btn-secondary btn-fill">
+                            <i class="fa fa-times" aria-hidden="true"></i><span>取消</span></button>
+                        <button type="button" id="btn_UpdateDetail_cost"
+                            class="btn btn-success btn-fill ml-3 valid-detail-button-cost">
+                            <i class="fa fa-save" aria-hidden="true"></i><span>保存</span></button>
+                    </div>
+                </div>
+            </form>
+            <label>計費明細</label>
+            <table id="editcost-table"></table>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                <button type="button" class="btn btn-primary ml-3" id="btnShippingCostSubmit">
+                    <i class="fa fa-save"></i>
+                    <span>提交</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="toolbar-cost" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i
+                class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            <a id="tb_edit_cost" href="#" title="編輯" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+            <a id="tb_delete_cost" href="#" title="刪除" asp-auth="del"><i class="fa fa-remove"></i></a>
+            <a id="tb_refresh_cost" href="#" title="重置" asp-auth="refresh"><i class="fa fa-refresh"></i></a>
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        <button id="btn_edit_cost" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil"
+                aria-hidden="true"></i><span>編輯</span></button>
+        <button id="btn_delete_cost" type="button" class="btn btn-danger" asp-auth="del"><i class="fa fa-remove"
+                aria-hidden="true"></i><span>刪除</span></button>
+        <button id="btn_refresh_cost" type="button" class="btn btn-warning" asp-auth="refresh"><i class="fa fa-refresh"
+                aria-hidden="true"></i><span>重置</span></button>
+    </div>
+    <div class="btn-group mt-3">
+        <form class="form-inline ">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CostStatus">計費狀態</label>
+                <input type="text" class="form-control" id="CostStatus" readonly />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="SignStatus_ShippingCost">簽單狀態</label>
+                <input type="text" class="form-control" id="SignStatus_ShippingCost" readonly />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="tableButtons_cost" class="d-none">
+    <div class='btn-group'>
+        <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+        <button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+    </div>
+</div>

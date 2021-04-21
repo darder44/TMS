@@ -1,0 +1,93 @@
+﻿@media (max-width: 767px) {
+    .form-signin {
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 5px;
+        max-width: 320px;
+        border: solid 1px #ddd;
+        background-color: #797979;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+    }
+}
+
+@media (min-width: 768px) {
+    body {
+        background-color: #f7f7f9;
+        background: url(../images/taipei101-2.jpg) no-repeat fixed;
+        background-size: cover;
+    }
+
+    .container {
+        border-color: #000;
+        width: 450px;
+        height: 380px;
+        margin: auto;
+        border-radius: 5px;
+        border-width: 2px;
+    }
+
+    .form-signin {
+        background-color: rgba(53, 59, 65, 0.85);
+        border-radius: 5px;
+        border: solid 1px rgba(53, 59, 65, 0.85);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.125);
+    }
+
+    .form-signin-heading {
+        padding: 20px 0;
+        background-color: transparent;
+        color: #f7f7f9;
+    }
+
+    .login-wrap .rememberPwd {
+        color: #f7f7f9;
+    }
+
+    .login-footer a {
+        color: #f7f7f9
+    }
+
+    .input-group-text {
+        background-color: white;
+        border-color: white;
+    }
+
+    .form-control {
+        border-color: white;
+    }
+
+    .login-wrap {
+        padding: 0;
+        width: 250px;
+        margin: 25px auto;
+        background-color: transparent;
+    }
+
+    .slidercaptcha {
+        top: 0px;
+        left: 0px;
+        margin: auto;
+    }
+
+        .slidercaptcha, .slidercaptcha.forgot {
+            width: 310px;
+            height: 280px;
+        }
+
+    .login-wrap[data-auth="True"] {
+        margin: auto;        
+    }
+
+        .login-wrap[data-auth="True"] .slidercaptcha {
+            top: -282px;           
+        }
+
+        .login-wrap[data-auth="True"] .slidercaptcha, .slidercaptcha.forgot {
+            width: 310px;
+            height: 280px;      
+        }
+
+        .login-wrap[data-auth="True"] .form-group {
+            margin-bottom: 0.75rem;
+        }
+}

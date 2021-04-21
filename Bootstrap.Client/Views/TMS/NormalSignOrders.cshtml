@@ -1,0 +1,311 @@
+@model NormalModel
+@{
+ViewBag.Title = "簽單維護";
+Layout = "_Bestlog";
+}
+@section css {
+}
+@section javascript {
+<script src="~/js/SignOrders/signorders.js" asp-append-version="true"></script>
+<script src="~/js/SignOrders/shippingcost.js" asp-append-version="true"></script>
+<script src="~/js/normalsignorders.js" asp-append-version="true"></script>
+}
+@section modal {
+<div class="modal fade" id="dialogSignOrders" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">簽單維護</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-signorder-tab" data-toggle="tab"
+                            href="#nav-signorder" role="tab" aria-controls="nav-signorder" aria-selected="true">簽單維護</a>
+                        <a asp-condition=@(Model.BestAdmin || Model.Roles.FirstOrDefault(r=> r.Contains("POD")) != null)
+                            class="nav-item nav-link" id="nav-shippingcost-tab" data-toggle="tab"
+                            href="#nav-shippingcost" role="tab" aria-controls="nav-shippingcost"
+                            aria-selected="false">運費維護</a>
+                    </div>
+                </nav>
+                <div class="tab-content">
+                    <div class="tab-pane show active" id="nav-signorder" role="tabpanel"
+                        aria-labelledby="nav-signorder-tab">
+                        @await Html.PartialAsync("SignOrders/SignOrders")
+                    </div>
+                    <div asp-condition=@(Model.BestAdmin || Model.Roles.FirstOrDefault(r=> r.Contains("POD")) != null)
+                        class="tab-pane" id="nav-shippingcost" role="tabpanel" aria-labelledby="nav-shippingcost-tab">
+                        @await Html.PartialAsync("SignOrders/ShippingCost")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogunshippedorders" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="mySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">未出訂單</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_RSCCode">異常原因</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="txt_RSCCode">
+                                <option value="">請選擇..</option>
+                                @foreach (var RSCCode in Model.RSCCode)
+                                {
+                                <option value="@RSCCode.Value">@string.Format("{0}　{1}", RSCCode.Value, RSCCode.Key)
+                                </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_RBCCode">責任歸屬</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="txt_RBCCode">
+                                <option value="">請選擇..</option>
+                                @foreach (var RBCCode in Model.RBCCode)
+                                {
+                                <option value="@RBCCode.Value">@string.Format("{0}　{1}", RBCCode.Value, RBCCode.Key)
+                                </option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_RBCName">責屬人</label>
+                            <input type="text" class="form-control" id="txt_RBCName" maxlength="60"
+                                data-default-val="" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_submit-unshippedorders" class="btn btn-primary btn-fill"><i
+                        class="fa fa-search" aria-hidden="true"></i><span>提交</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogShippingCost" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">運費維護</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                @*await Html.PartialAsync("SignOrders/ShippingCost")*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogdeliveryabnormal" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit"
+            data-valid-modal="#dialogNew">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">出車異常維護</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_DeliveryAbnormal">異常原因</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10"
+                                data-valid="true" readonly="true" />
+                            <select data-toggle="lgbSelect" class="d-none" data-valid="true" id="txt_DeliveryAbnormal"
+                                data-default-val="">
+                                @foreach (var deliveryabnormal in @Model.DeliveryAbNormalCode)
+                                {
+                                <option value="@deliveryabnormal.Value">@string.Format("{0}　{1}",
+                                    deliveryabnormal.Value, deliveryabnormal.Key)</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                    <span>關閉</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSubmit_deliveryabnormal">
+                    <i class="fa fa-save"></i>
+                    <span>確認重組</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@section query{
+<form class="form-inline">
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_storerkey">貨主</label>
+            <select id="sel_storerkey" multiple="multiple">
+                <optgroup label="貨主">
+                    @foreach (var StorerKey in @Model.StorerKeys)
+                    {
+                    <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                    }
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_TMSKey">訂單單號</label>
+            <input type="text" class="form-control" id="txt_TMSKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ExternOrderKey">貨主單號</label>
+            <input type="text" class="form-control" id="txt_ExternOrderKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_RouteNo">路線編號</label>
+            <input type="text" class="form-control" id="txt_RouteNo" maxlength="11" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_sdnback">簽單回傳</label>
+            <select id="sel_sdnback" multiple="multiple">
+                <optgroup label="簽單回傳">
+                    <option value="0">未回傳</option>
+                    <option value="1">已回傳</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_signstatus">簽單狀態</label>
+            <select id="sel_signstatus" multiple="multiple">
+                <optgroup label="簽單狀態">
+                    <option value="0">未維護</option>
+                    <option value="正常訂單">正常訂單</option>
+                    <option value="異常訂單">異常訂單</option>
+                    <option value="未出訂單">未出訂單</option>
+                </optgroup>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_OrderDate_Start">訂單日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_Start" class="form-control" size="16" type="text" data-default-val="" readonly>
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_OrderDate_End">訂單日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_End" class="form-control" size="16" type="text" data-default-val="" readonly>
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DoRouteDate_Start">出車日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DoRouteDate_Start" class="form-control" size="16" type="text" data-default-val=""
+                    readonly>
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DoRouteDate_End">出車日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DoRouteDate_End" class="form-control" size="16" type="text" data-default-val="" readonly>
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DeliveryDate_Start">到貨日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_Start" class="form-control" size="16" type="text" data-default-val=""
+                    readonly>
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DeliveryDate_End">到貨日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_End" class="form-control" size="16" type="text" data-default-val=""
+                    readonly>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="autoShow">自動彈出查詢</label><!--like a shit = =-->
+            <input id="autoShow" hidden type="checkbox" data-default-val="false" data-toggle="toggle" data-width="150"
+                data-onstyle="success" data-on="是" data-off="否" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="autoSignOrder">查詢一筆自動進入簽單維護</label><!--like a shit = =-->
+            <input id="autoSignOrder" hidden type="checkbox" data-default-val="false" data-toggle="toggle" data-width="150"
+                data-onstyle="success" data-on="是" data-off="否" />
+        </div>
+    </div>
+</form>
+}
+@section gear{
+<a id="tb_signorders" href="#" title="簽單維護" asp-auth="add"><i class="fa fa-cogs"></i></a>
+<a id="tb_normalorders" href="#" title="正常訂單" asp-auth="normalorders"><i class="fa fa-thumbs-o-up"></i></a>
+<a id="tb_clearsignorder" href="#" title="清空簽單狀態" asp-auth="clearsignorder"><i class="fa fa-chain-broken"></i></a>
+}
+@section toolbar {
+<button id="btn_signorders" type="button" class="btn btn-primary" asp-auth="add"><i class="fa fa-cogs"
+        aria-hidden="true"></i><span>維護</span></button>
+<button id="btn_normalorders" type="button" class="btn btn-success" asp-auth="normalorders"><i class="fa fa-thumbs-o-up"
+        aria-hidden="true"></i><span>正常訂單</span></button>
+<button id="btn_clearsignorder" type="button" class="btn btn-warning" asp-auth="clearsignorder"><i
+        class="fa fa-chain-broken" aria-hidden="true"></i><span>清空簽單狀態</span></button>
+}
+@section toolbarbtngroup {
+<button class="btn btn-danger dropdown-toggle" type="button" id="dropdownOrderStatus" data-toggle="dropdown"
+    aria-haspopup="true" aria-expanded="false">
+    異常處理
+</button>
+<div class="dropdown-menu" aria-labelledby="dropdownOrderStatus">
+    <a id="btn_deliveryabnormal" class="dropdown-item" href="#" asp-auth="deliveryabnormal"><i class="fa fa-cubes"
+            aria-hidden="true"></i><span>出車異常重組</span></a>    
+    <a id="btn_calculate" class="dropdown-item" href="#" asp-auth="calculate"><i class="fa fa-money"
+            aria-hidden="true"></i><span>重新計費</span></a>    
+</div>
+}
+@section customtoolbar {
+}
+@section card{
+<div class="card">
+    <div class="card-header">
+        簽單維護
+    </div>
+    <div class="card-body">
+        <table id="normalsignorders-table"></table>
+    </div>
+</div>
+<div id="signorderdetailtableButtons" class="d-none">
+    <div class='btn-group'>
+        <button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+    </div>
+</div>
+}
+@section tableButtons{
+<button class='signorders btn btn-sm btn-primary' asp-auth="add"><i class='fa fa-pencil'></i><span>維護</span></button>
+<button class='normalorders btn btn-sm btn-success' asp-auth="normalorders"><i
+        class='fa fa-check'></i><span>正常訂單</span></button>
+<button class='unshippedorders btn btn-sm btn-danger' asp-auth="unshippedorders"><i
+        class='fa fa-times'></i><span>未出訂單</span></button>
+<button class='shippingcost btn btn-sm btn-warning' asp-auth="shippingcost"><i
+        class='fa fa-pencil'></i><span>運費維護</span></button>
+<button class='deliveryabnormal btn btn-sm btn-success' asp-auth="deliveryabnormal"><i
+        class='fa fa-pencil'></i><span>出車異常重組</span></button>
+}

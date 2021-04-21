@@ -1,0 +1,755 @@
+@model NormalModel
+@{
+ViewBag.Title = "一般排車";
+Layout = "_Bestlog";
+}
+@section css {
+}
+@section javascript {
+<script src="~/js/normalstandbyorders.js" asp-append-version="true"></script>
+}
+
+@section modal {
+<div class="modal fade" id="dialogAssign" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btn_Submit_Assign"
+            data-valid-modal="#dialogAssign">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">組成路編</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        出車資料
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="txt_DoRouteDate">出車日期</label>
+                                <div class="input-group input-append datepicker">
+                                    <input type="text" class="form-control" id="txt_DoRouteDate" placeholder=""
+                                        data-valid="true" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="txt_Dock">暫存碼頭</label>
+                                <input type="text" class="form-control" id="txt_Dock" placeholder="不可為空"
+                                    data-valid="true" />
+                            </div>
+                            <div class="form-group col-sm-auto col-lg-auto">
+                                <label class="control-label" for="txt_ExpectDate">預計出車日期</label>
+                                <div class="input-group input-append datepicker">
+                                    <input type="text" class="form-control" id="txt_ExpectDate" placeholder="請選擇出車日期"
+                                        data-valid="true" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-auto col-lg-auto">
+                                <label class="control-label" for="txt_ExpectTime">預計出車時間</label>
+                                <div class="input-group input-append timepicker">
+                                    <input type="text" class="form-control" id="txt_ExpectTime" placeholder="請選擇預計出車時間"
+                                        maxlength="4" data-valid="true" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="VehicleKey">車牌號碼</label>
+                                <select class="form-control " data-valid="true" id="VehicleKey"></select>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="Driver">司機</label>
+                                <div class="input-group input-append">
+                                    <select class="form-control" data-valid="true" id="Driver"></select>
+                                    <div class="input-group-append input-group-addon">
+                                        <div class="input-group-text" id="RefreshDriver" style="cursor: pointer;">
+                                            <span class="fa fa-refresh"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="DriverPhone">電話</label>
+                                <input type="text" class="form-control" id="DriverPhone" readonly disabled />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="DriverReceiver">請款人</label>
+                                <input type="text" class="form-control" id="DriverReceiver" readonly disabled />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="DriverCompany">貨運公司</label>
+                                <input type="text" class="form-control" id="DriverCompany" readonly disabled />
+                            </div>
+                        </div>                        
+                        <form class="form-inline">
+                            <div class="row">
+                                <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                                    <label class="control-label" for="sel_Transfer">是否轉運</label>
+                                    <input id="sel_Transfer" hidden type="checkbox" data-width="194"
+                                        data-default-val="false" data-toggle="toggle" data-onstyle="success" data-on="是"
+                                        data-off="否" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end" id="sel_TransferTo" style="display: none">
+                                    <label class="control-label" for="txt_TransferTo">轉運站</label>
+                                    <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10"
+                                        data-valid="true" data-default-val="" />
+                                    <select data-toggle="lgbSelect" class="d-none" data-valid="true" id="txt_TransferTo"
+                                        data-default-val="">
+                                        <option value="">請選擇...</option>
+                                        @foreach (var Facility in @Model.Facilities)
+                                        {
+                                        <option value="@Facility.Value">@Facility.Key</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>                    
+                </div>
+                <div class="card" style="overflow: auto;">
+                    <div class="card-header">
+                        已選取訂單
+                    </div>
+                    <div class="card-body">
+                        <table id="selected-orders-table"></table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                    <span>關閉</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btn_Submit_Assign">
+                    <i class="fa fa-save"></i>
+                    <span>組成排車</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogNew_Temp" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit_Temp"
+            data-valid-modal="#dialogNew_Temp">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">編輯待維護客戶</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline">
+                    <input type="hidden" id="StorerKeyID_Temp" />
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="StorerKey_Temp">貨主代號</label>
+                            <input type="text" class="form-control" id="StorerKey_Temp" data-valid="true" readonly />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="TMSKey_Temp">訂單號碼</label>
+                            <input type="text" class="form-control" id="TMSKey_Temp" maxlength="10" readonly />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ExternOrderKey_Temp">貨主單號</label>
+                            <input type="text" class="form-control" id="ExternOrderKey_Temp" maxlength="30" readonly />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ConsigneeKey_Temp">客戶編號</label>
+                            <input type="text" class="form-control" id="ConsigneeKey_Temp" placeholder="不可為空，100字以内"
+                                maxlength="100" data-valid="true" readonly />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ShortName_Temp">客戶簡稱</label>
+                            <input type="text" class="form-control" id="ShortName_Temp" placeholder="不可為空，60字以内"
+                                maxlength="60" data-valid="true" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Zip_Temp">郵遞區號</label>
+                            <input type="text" class="form-control" id="Zip_Temp" placeholder="不可為空，100字以内"
+                                maxlength="100" data-valid="true" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Contact_Temp">聯絡人</label>
+                            <input type="text" class="form-control" id="Contact_Temp" placeholder="不可為空，100字以内"
+                                maxlength="100" data-valid="true" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Phone_Temp">電話</label>
+                            <input type="text" class="form-control" id="Phone_Temp" placeholder="不可為空，100字以内"
+                                maxlength="100" data-valid="true" />
+                        </div>
+                        <div class="form-group col-12">
+                            <label for="ShipToAddress_Temp">到貨地址</label>
+                            <textarea id="ShipToAddress_Temp" class="form-control mt-2" style="width: 100%;"
+                                placeholder="不可為空，200字以內" rows="3" maxlength="200" data-valid="true"></textarea>
+                        </div>
+                    </div>
+                </form>
+                <form class="form-inline">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label>現有客戶主檔</label>
+                            <pre id="customerData"></pre>
+                        </div>
+                        <div class="form-group col-6">
+                            <label>暫存客戶主檔</label>
+                            <pre id="customerData_temp"></pre>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                    <span>關閉</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSubmit_Temp">
+                    <i class="fa fa-save"></i>
+                    <span>保存</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="dialogupdaterouteno" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btn_submit-updaterouteno"
+            data-valid-modal="#dialogupdaterouteno">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">路線編號維護</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_RouteNo_update">路線編號</label>
+                            <input type="text" class="form-control" id="txt_RouteNo_update" placeholder="不可為空"
+                                data-valid="true" readonly />
+                        </div>                        
+                        <div class="form-group col-sm-auto col-lg-auto">
+                            <label class="control-label" for="txt_DoRouteDate_update">出車日期</label>
+                            <div class="input-group input-append datepicker">
+                                <input type="text" class="form-control" id="txt_DoRouteDate_update" placeholder=""
+                                    data-valid="true" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_Dock_update">暫存碼頭</label>
+                            <input type="text" class="form-control" id="txt_Dock_update" placeholder="不可為空"
+                                data-valid="true" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto col-lg-auto">
+                            <label class="control-label" for="txt_ExpectDate_update">預計出車日期</label>
+                            <div class="input-group input-append datepicker">
+                                <input type="text" class="form-control" id="txt_ExpectDate_update" placeholder="請選擇出車日期"
+                                    data-valid="true" readonly />
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto col-lg-auto">
+                            <label class="control-label" for="txt_ExpectTime_update">預計出車時間</label>
+                            <div class="input-group input-append timepicker">
+                                <input type="text" class="form-control" id="txt_ExpectTime_update"
+                                    placeholder="請選擇預計出車時間" maxlength="4" data-valid="true" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="VehicleKey_update">車牌號碼</label>
+                            <select class="form-control " data-valid="true" id="VehicleKey_update"></select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Driver_update">司機</label>
+                            <div class="input-group input-append">
+                                <select class="form-control" data-valid="true" id="Driver_update"></select>
+                                <div class="input-group-append input-group-addon">
+                                    <div class="input-group-text" id="RefreshDriver_update" style="cursor: pointer;">
+                                        <span class="fa fa-refresh"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DriverPhone_update">電話</label>
+                            <input type="text" class="form-control" id="DriverPhone_update" readonly disabled />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DriverReceiver_update">請款人</label>
+                            <input type="text" class="form-control" id="DriverReceiver_update" readonly disabled />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DriverCompany_update">貨運公司</label>
+                            <input type="text" class="form-control" id="DriverCompany_update" readonly disabled />
+                        </div>
+                    </div>
+                </form>                
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_submit-updaterouteno" class="btn btn-primary btn-fill"><i
+                        class="fa fa-search" aria-hidden="true"></i><span>提交</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="normalroutelist-dialogAdvancedSearch" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="mySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">查詢條件</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="txt_RouteNo">路線編號</label>
+                            <input type="text" class="form-control" id="txt_RouteNo" maxlength="11"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_VehicleKey">車牌號碼</label>
+                            <input type="text" class="form-control" id="txt_VehicleKey" data-default-val="" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_DoRouteDate_Start">出車日期(起)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DoRouteDate_Start" class="form-control" size="16" type="text" value=""
+                                    readonly data-default-val="">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_DoRouteDate_End">出車日期(迄)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DoRouteDate_End" class="form-control" size="16" type="text" value=""
+                                    readonly data-default-val="">
+                            </div>
+                        </div>
+                        <!--<div class="form-group col-sm-auto">
+                                <label class="control-label" for="txt_ToWMS">回傳狀態</label>
+                                <input type="text" class="form-control" data-toggle="lgbSelect" />
+                                <select data-toggle="lgbSelect" class="d-none" id="txt_ToWMS" data-default-val="0" >
+                                    <option value="">全部</option>
+                                    <option value="0">未回傳</option>
+                                    <option value="1">已回傳</option>
+                                </select>
+                            </div>-->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_reset-routelist" class="btn btn-info btn-fill"><i class="fa fa-trash-o"
+                        aria-hidden="true"></i><span>重置</span></button>
+                <button type="button" id="btn_query-routelist" class="btn btn-primary btn-fill"><i class="fa fa-search"
+                        aria-hidden="true"></i><span>查詢</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="customer-dialogAdvancedSearch" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="mySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">查詢條件</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="sel_storerkey_temp">貨主</label>
+                            <select id="sel_storerkey_temp" multiple="multiple">
+                                <optgroup label="貨主">
+                                    @foreach (var StorerKey in @Model.StorerKeys)
+                                    {
+                                    <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value,
+                                        StorerKey.Key)</option>
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_ConsigneeKey_Temp">客編</label>
+                            <input type="text" class="form-control" id="txt_ConsigneeKey_Temp" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_TMSKey_Temp">訂單號碼</label>
+                            <input type="text" class="form-control" id="txt_TMSKey_Temp" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_reset-customer-temp" class="btn btn-info btn-fill"><i
+                        class="fa fa-trash-o" aria-hidden="true"></i><span>重置</span></button>
+                <button type="button" id="btn_query-customer-temp" class="btn btn-primary btn-fill"><i
+                        class="fa fa-search" aria-hidden="true"></i><span>查詢</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="reserveorders-dialogAdvancedSearch" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="mySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">查詢條件</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="sel_storerkey_reserveorder">貨主</label>
+                            <select id="sel_storerkey_reserveorder" multiple="multiple">
+                                <optgroup label="貨主">
+                                    @foreach (var StorerKey in @Model.StorerKeys)
+                                    {
+                                    <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value,
+                                        StorerKey.Key)</option>
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_ConsigneeKey_reserveorder">客編</label>
+                            <input type="text" class="form-control" id="txt_ConsigneeKey_reserveorder" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_TMSKey_reserveorder">訂單號碼</label>
+                            <input type="text" class="form-control" id="txt_TMSKey_reserveorder" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_ExternOrderKey_reserveorder">貨主單號</label>
+                            <input type="text" class="form-control" id="txt_ExternOrderKey_reserveorder" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_OrderType">訂單類別</label>
+                            <input type="text" class="form-control" id="txt_OrderType" maxlength="20"
+                                data-default-val="" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="sel_AreaCode_reserverorder">區碼</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="sel_AreaCode_reserverorder">
+                                <option value="">全部</option>
+                                @foreach (var AreaCode in Model.AreaCodes)
+                                {
+                                <option value="@AreaCode.Value">@string.Format("{0}　{1}", AreaCode.Value, AreaCode.Key)
+                                </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_OrdereDate_Start_reserveorder">訂單日期(起)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_OrdereDate_Start_reserveorder" class="form-control" size="16" type="text"
+                                    value="" readonly data-default-val="">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_OrderDate_End_reserveorder">訂單日期(迄)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_OrderDate_End_reserveorder" class="form-control" size="16" type="text"
+                                    value="" readonly data-default-val="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_DeliveryDate_Start_reserveorder">到貨日期(起)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DeliveryDate_Start_reserveorder" class="form-control" size="16"
+                                    type="text" value="" readonly data-default-val="">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="txt_DeliveryDate_End_reserveorder">到貨日期(迄)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DeliveryDate_End_reserveorder" class="form-control" size="16" type="text"
+                                    value="" readonly data-default-val="">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_reset-reserveorders" class="btn btn-info btn-fill"><i
+                        class="fa fa-trash-o" aria-hidden="true"></i><span>重置</span></button>
+                <button type="button" id="btn_query-reserveorders" class="btn btn-primary btn-fill"><i
+                        class="fa fa-search" aria-hidden="true"></i><span>查詢</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@section query{
+<form class="form-inline">
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_storerkey">貨主</label>
+            <select id="sel_storerkey" multiple="multiple">
+                <optgroup label="貨主">
+                    @foreach (var StorerKey in @Model.StorerKeys)
+                    {
+                    <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                    }
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_orderstatus">訂單狀態</label>
+            <select id="sel_orderstatus" multiple="multiple">
+                <optgroup label="訂單狀態">
+                    <option value="1">未排車</option>
+                    <option value="3">轉運</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_ordertypes">訂單類別</label>
+            <select id="sel_ordertypes" multiple="multiple">
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_TMSKey">訂單號碼</label>
+            <input type="text" class="form-control" id="txt_TMSKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ExternOrderKey">貨主單號</label>
+            <input type="text" class="form-control" id="txt_ExternOrderKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ConsigneeKey">客戶編號</label>
+            <input type="text" class="form-control" id="txt_ConsigneeKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_Zip">郵遞區號</label>
+            <input type="text" class="form-control" id="txt_Zip" maxlength="60" data-default-val="" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_OrderDate_Start">訂單日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_Start" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_OrderDate_End">訂單日期(迄)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_OrderDate_End" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DeliveryDate_Start">到貨日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_Start" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_DeliveryDate_End">到貨日期(迄)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDate_End" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+    </div>
+</form>
+}
+@section gear{
+<!--<a id="tb_returnwms" href="#" title="回傳倉庫" asp-auth="returnwms"><i class="fa fa-truck"></i></a>-->
+<a id="tb_updaterouteno" href="#" title="維護路編" asp-auth="updaterouteno"><i class="fa fa-pencil"></i></a>
+<a id="tb_delroute" href="#" title="刪除路編" asp-auth="del"><i class="fa fa-remove"></i></a>
+<a id="tb_checkroute" href="#" title="出車確認" asp-auth="checkroute"><i class="fa fa-truck"></i></a>
+}
+@section toolbar{
+<!--<button id="btn_returnwms" type="button" class="btn btn-primary" asp-auth="returnwms"><i class="fa fa-truck" aria-hidden="true"></i><span>回傳倉庫</span></button>-->
+<button id="btn_updaterouteno" type="button" class="btn btn-primary" asp-auth="updaterouteno"><i class="fa fa-pencil"
+        aria-hidden="true"></i><span>維護路編</span></button>
+<button id="btn_delroute" type="button" class="btn btn-danger" asp-auth="del"><i class="fa fa-remove"
+        aria-hidden="true"></i><span>刪除路編</span></button>
+<button id="btn_checkroute" type="button" class="btn btn-warning" asp-auth="checkroute"><i class="fa fa-truck"
+        aria-hidden="true"></i><span>出車確認</span></button>
+}
+@section customToolbar {
+<div id="toolbar-customer-temp" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i
+                class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            <a id="tb_edit_temp" href="#" title="維護" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+            <a id="tb_checkcustomer" href="#" title="訂單轉入" asp-auth="checkcustomer"><i class="fa fa-truck"></i></a>
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        <button id="btn_edit_temp" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil"
+                aria-hidden="true"></i><span>維護</span></button>
+        <button id="btn_checkcustomer" type="button" class="btn btn-warning" asp-auth="checkcustomer"><i
+                class="fa fa-truck" aria-hidden="true"></i><span>訂單轉入</span></button>
+    </div>
+</div>
+
+<div id="toolbar-normalreserveorder" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i
+                class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            <a id="tb_returnorder" href="#" title="移至待排車" asp-auth="returnorder"><i class="fa fa-truck"></i></a>
+            <a id="tb_deleteorder" href="#" title="刪除訂單" asp-auth="deleteorder"><i class="fa fa-remove"></i></a>
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        <button id="btn_returnorder" type="button" class="btn btn-warning" asp-auth="returnorder"><i class="fa fa-truck"
+                aria-hidden="true"></i><span>移至待排車</span></button>
+        <button id="btn_deleteorder" type="button" class="btn btn-danger" asp-auth="deleteorder"><i class="fa fa-remove"
+                aria-hidden="true"></i><span>刪除訂單</span></button>
+    </div>
+</div>
+
+<div id="toolbar-normalstandbyorders" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i
+                class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            <a id="tb_assign" href="#" title="組成路編" asp-auth="NormalStandbyOrders"><i class="fa fa-inbox"></i></a>
+            <a id="tb_reserveorder" href="#" title="訂單保留" asp-auth="reserveorders"><i class="fa fa-truck"></i></a>
+            <a id="tb_updateskudata" href="#" title="訂單保留" asp-auth="updateskudata"><i class="fa fa-refresh"></i></a>
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        <button id="btn_assign" type="button" class="btn btn-primary" asp-auth="NormalStandbyOrders"><i
+                class="fa fa-inbox" aria-hidden="true"></i><span>組成路編</span></button>
+        <button id="btn_reserveorder" type="button" class="btn btn-warning" asp-auth="reserveorders"><i
+                class="fa fa-truck" aria-hidden="true"></i><span>訂單保留</span></button>
+        <button id="btn_updateskudata" type="button" class="btn btn-success" asp-auth="updateskudata"><i
+                class="fa fa-refresh" aria-hidden="true"></i><span>更新箱板材重</span></button>
+    </div>
+</div>
+}
+@section toolbarbtngroup {
+
+}
+
+
+@section card{
+<div class="card">
+    <div class="card-header">
+        一般排車
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-customer-temp-tab" data-toggle="tab"
+                            href="#nav-customer-temp" role="tab" aria-controls="nav-customer-temp"
+                            aria-selected="true">訂單轉入及客戶異動</a>
+                        <a class="nav-item nav-link" id="nav-normalstandbyorders-tab" data-toggle="tab"
+                            href="#nav-normalstandbyorders" role="tab" aria-controls="nav-normalstandbyorders"
+                            aria-selected="false">待排車訂單</a>
+                        <a class="nav-item nav-link" id="nav-normalroutelist-tab" data-toggle="tab"
+                            href="#nav-normalroutelist" role="tab" aria-controls="nav-normalroutelist"
+                            aria-selected="false">已排車訂單</a>
+                        <a class="nav-item nav-link" id="nav-normal-tab" data-toggle="tab"
+                            href="#nav-normalreserveorder" role="tab" aria-controls="nav-normalreserveorder"
+                            aria-selected="false">保留訂單</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-customer-temp" role="tabpanel"
+                        aria-labelledby="nav-customer-temp-tab">
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="customer-temp-table"></table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-normalstandbyorders" role="tabpanel"
+                        aria-labelledby="nav-normalstandbyorders-tab">
+                        <div class="btn-group mt-3">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label col-12 mb-3" for="txt_Case">勾選箱數</label>
+                                <input type="text" class="form-control" id="txt_Case" maxlength="60" value="0"
+                                    readonly />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label col-12 mb-3" for="txt_Pallet">勾選板數</label>
+                                <input type="text" class="form-control" id="txt_Pallet" maxlength="60" value="0"
+                                    readonly />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label col-12 mb-3" for="txt_Cube">勾選材積</label>
+                                <input type="text" class="form-control" id="txt_Cube" maxlength="60" value="0"
+                                    readonly />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label col-12 mb-3" for="txt_Weight">勾選重量</label>
+                                <input type="text" class="form-control" id="txt_Weight" maxlength="60" value="0"
+                                    readonly />
+                            </div>
+                        </div>
+
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="normalstandbyorders-table"></table>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="nav-normalroutelist" role="tabpanel"
+                        aria-labelledby="nav-normalroutelist-tab">
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="normalroutelist-table"></table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-normalreserveorder" role="tabpanel"
+                        aria-labelledby="nav-normalreserveorder-tab">
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="normalreserveorder-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+@section tableButtons{
+<button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+}
+@section customTableButtons{
+<div id="tableButtons-customer-temp" class="d-none">
+    <div class='btn-group'>
+        <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>維護</span></button>
+    </div>
+</div>
+<div id="tableButtons-normalreserveorder" class="d-none">
+    <div class='btn-group'>
+        <button class='returnorder btn btn-sm btn-success' asp-auth="returnorder"><i
+                class='fa fa-truck'></i><span>移至待排車</span></button>
+    </div>
+</div>
+}

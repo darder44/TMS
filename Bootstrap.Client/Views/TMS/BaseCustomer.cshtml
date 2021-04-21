@@ -1,0 +1,314 @@
+@model NormalModel
+@{
+ViewBag.Title = "客戶主檔";
+Layout = "_Bestlog";
+}
+@section css {    
+}
+@section javascript {
+<script src="~/js/basecustomer.js" asp-append-version="true"></script>
+}
+
+<!--新增、編輯欄位-->
+@section modal {
+<div class="modal fade" id="dialogNew" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit"
+            data-valid-modal="#dialogNew">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">客戶基本資料維護</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-inline">
+                    <input type="hidden" id="BCID" />
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ConsigneeKey">客戶編號</label>
+                            <input type="text" class="form-control" id="ConsigneeKey" placeholder="不可為空,請輸入數字" maxlength="20" data-valid="true" CheckConsigneeKey="#ConsigneeKey"/>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="StorerKey">貨主編號</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" data-valid="true" />
+                            <select data-toggle="lgbSelect" class="d-none" id="StorerKey" >
+                                @foreach (var StorerKey in @Model.StorerKeys)
+                                {
+                                <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                                }
+                            </select>
+                        </div>       
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="FullName">客戶全名</label>
+                            <input type="text" class="form-control" id="FullName" placeholder="120字以內" maxlength="120" style="width: 100%;" />
+                        </div>    
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="AreaCode">區碼</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="AreaCode">       
+                                <option value="">請選擇..</option>                         
+                                @foreach (var AreaCode in Model.AreaCodes)
+                                {
+                                <option value="@AreaCode.Value">@string.Format("{0}　{1}", AreaCode.Value, AreaCode.Key)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Zip">郵遞區號</label>
+                            <input type="text" class="form-control" id="Zip" placeholder="請輸入郵遞區號" maxlength="10" data-valid="true" />
+                        </div>                                                                                   
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ShortName">客戶簡稱</label>
+                            <input type="text" class="form-control" id="ShortName" placeholder="120字以內"
+                                maxlength="120" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Contact">聯絡人</label>
+                            <input type="text" class="form-control" id="Contact" placeholder="100字以內" maxlength="100" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Phone">電話</label>
+                            <input type="text" class="form-control" id="Phone" placeholder="30字以內" maxlength="30" />
+                        </div>                                                  
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="VehicleType">車種代碼</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="2" />
+                            <select data-toggle="lgbSelect" class="d-none" id="VehicleType">
+                                <option value="">請選擇..</option>                                    
+                                @foreach (var VehicleType in Model.VehicleTypes)
+                                {
+                                <option value="@VehicleType.Value">@string.Format("{0}　{1}", VehicleType.Value, VehicleType.Key)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DemandCode1">特殊需求一</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect"  maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="DemandCode1">   
+                                <option value="">請選擇..</option>                     
+                                @foreach (var ExtraDemandCode in Model.ExtraDemandCodes)
+                                {
+                                <option value="@ExtraDemandCode.Value">@string.Format("{0}　{1}", ExtraDemandCode.Value, ExtraDemandCode.Key)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DemandCode2">特殊需求二</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="DemandCode2">      
+                                <option value="">請選擇..</option>                              
+                                @foreach (var ExtraDemandCode in Model.ExtraDemandCodes)
+                                {
+                                <option value="@ExtraDemandCode.Value">@string.Format("{0}　{1}", ExtraDemandCode.Value, ExtraDemandCode.Key)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ChannelType">通路型態</label>
+                            <input type="text" class="form-control" id="ChannelType" placeholder="10字以內"
+                                maxlength="10" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="PickTool">搬運工具</label>
+                            <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                            <select data-toggle="lgbSelect" class="d-none" id="PickTool">
+                                <option value="">請選擇..</option>                                    
+                                <option value="01">01 堆高機</option>
+                                <option value="05">05 拖板車</option>
+                                <option value="10">10 人工搬運</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Channel">通路別</label>
+                            <input type="text" class="form-control" id="Channel" placeholder="20字以內" maxlength="20" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="CodeDate1">允收期一</label>
+                            <input type="number" class="form-control" id="CodeDate1" placeholder="請輸入數字" min="0"
+                                data-valid="false" data-default-val="0" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="CodeDate2">允收期二</label>
+                            <input type="number" class="form-control" id="CodeDate2" placeholder="請輸入數字" min="0"
+                                data-valid="false" data-default-val="0"/>
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Fax">傳真</label>
+                            <input type="text" class="form-control" id="Fax" placeholder="18字以內" maxlength="18" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="PalletType">棧板類別</label>
+                            <input type="text" class="form-control" id="PalletType" placeholder="10字以內"
+                                maxlength="10" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="PalletSpec">棧板規格</label>
+                            <input type="text" class="form-control" id="PalletSpec" placeholder="10字以內"
+                                maxlength="10" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="Penalties">罰款通路</label>
+                            <input type="text" class="form-control" id="Penalties" placeholder="1字以內" maxlength="1" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="DC">統倉</label>
+                            <input id="DC" hidden type="checkbox" data-default-val="false" data-toggle="toggle"
+                                data-width="194" data-onstyle="success" data-on="是" data-off="否" />
+                        </div>
+
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="UpdateSource">資料來源</label>
+                            <input type="text" class="form-control" id="UpdateSource" placeholder="10字以內"
+                                maxlength="10" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="CustGroup">客戶群組</label>
+                            <input type="text" class="form-control" id="CustGroup" placeholder="100字以內" maxlength="100" data-valid="false" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="CustomerType">客戶型態</label>
+                            <input type="text" class="form-control" id="CustomerType" maxlength="1" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="OrderGroup">訂單群組</label>
+                            <input type="text" class="form-control" id="OrderGroup" placeholder="8字以內" maxlength="8" />
+                        </div>                        
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="SalesOffice">業務辦公室</label>
+                            <input type="text" class="form-control" id="SalesOffice" placeholder="80字以內"
+                                maxlength="80" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="CustomerEAN">特殊一</label>
+                            <input type="text" class="form-control" id="CustomerEAN" placeholder="20字以內"
+                                maxlength="20" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="SN">特殊二</label>
+                            <input type="text" class="form-control" id="SN" placeholder="4字以內" maxlength="4" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="PaperSize">紙張格式</label>
+                            <input type="text" class="form-control" id="PaperSize" placeholder="50字以內" maxlength="50" />
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="InvoiceAddress">發票地址</label>
+                            <input type="text" class="form-control" id="InvoiceAddress" placeholder="400字以內"
+                                maxlength="400" style="width: 100%;"/>
+                        </div>                        
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="SoldTo">銷售客編</label>
+                            <input type="text" class="form-control" id="SoldTo" placeholder="50字以內" maxlength="50" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="SoldToName">銷售客戶名稱</label>
+                            <input type="text" class="form-control" id="SoldToName" placeholder="50字以內" maxlength="50" />
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="SoldToAddress">銷售點地址</label>
+                            <input type="text" class="form-control" id="SoldToAddress" placeholder="50字以內" maxlength="50" style="width: 100%;" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ShipTo">到貨客編</label>
+                            <input type="text" class="form-control" id="ShipTo" placeholder="50字以內" maxlength="50" />
+                        </div>
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="ShipToName">到貨客戶名稱</label>
+                            <input type="text" class="form-control" id="ShipToName" placeholder="50字以內" maxlength="50" />
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="ShipToAddress">到貨點地址</label>
+                            <input type="text" class="form-control" id="ShipToAddress" placeholder="400字以內" maxlength="400" style="width: 100%;" />
+                        </div>
+                    </div>
+                    <div class="row">                        
+                        <div class="form-group col-sm-12">
+                            <label for="Notes">備註</label>
+                            <textarea id="Notes" class="form-control mt-2" style="width: 100%;" placeholder="300字以內" rows="3" maxlength="300"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                    <span>關閉</span>
+                </button>
+                <button type="button" class="btn btn-primary" id="btnSubmit">
+                    <i class="fa fa-save"></i>
+                    <span>保存</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<!--查詢-->
+@section query{
+<form class="form-inline">
+    <div class="row">
+        <!--<div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_StorerKey">貨主編號</label>
+            <input type="text" class="form-control" id="txt_StorerKey" maxlength="15" data-default-val="" />
+        </div>-->
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_storerkey">貨主</label>
+            <select id="sel_storerkey" multiple="multiple">
+                <optgroup label="貨主">                    
+                    @foreach (var StorerKey in @Model.StorerKeys)
+                    {
+                        <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ConsigneeKey">客戶編號</label>
+            <input type="text" class="form-control" id="txt_ConsigneeKey" maxlength="20" data-default-val="" />
+        </div>
+            <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_FullName">全名</label>
+            <input type="text" class="form-control" id="txt_FullName" maxlength="60" data-default-val="" />
+        </div>    
+    </div>
+</form>
+}
+
+@section gear{
+<a id="tb_add" href="#" title="新增" asp-auth="add"><i class="fa fa-plus"></i></a>
+<a id="tb_delete" href="#" title="刪除" asp-auth="del"><i class="fa fa-remove"></i></a>
+<a id="tb_edit" href="#" title="編輯" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+<a id="tb_export" href="#" title="匯出資料" asp-auth="Export"><i class="fa fa-download"></i></a>
+}
+
+@section toolbar{
+<button id="btn_add" type="button" class="btn btn-success" asp-auth="add"><i class="fa fa-plus"
+        aria-hidden="true"></i><span>新增</span></button>
+<button id="btn_deleteCustomer" type="button" class="btn btn-danger" asp-auth="del"><i class="fa fa-remove"
+        aria-hidden="true"></i><span>刪除</span></button>
+<button id="btn_edit" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil"
+        aria-hidden="true"></i><span>編輯</span></button>
+<button id="btn_export" type="button" class="btn btn-warning" asp-auth="Export"><i class="fa fa-download"
+        aria-hidden="true"></i><span>匯出資料</span></button>
+}
+
+@section card{
+<div class="card">
+    <div class="card-header">
+        客戶主檔
+    </div>
+    <div class="card-body">
+        <table id="BaseCustomer-table"></table>
+    </div>
+</div>
+}
+
+@section tableButtons{
+<button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+<button class='delInfo btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+}

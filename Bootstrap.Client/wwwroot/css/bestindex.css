@@ -1,0 +1,82 @@
+﻿@charset "utf-8";
+@import url("reset.css");
+
+#VISION_BOX {
+    width: 100%;
+    height: 245px;
+    position: relative;
+    overflow: hidden;
+}
+
+    #VISION_BOX ul.BOX li img {
+        width: 65%;
+        height: auto;
+    }
+
+    #VISION_BOX a {
+        text-decoration: none;
+    }
+
+        #VISION_BOX a:hover {
+            text-decoration: none;
+        }
+
+    #VISION_BOX span.TITLE {
+        width: 430px;
+        height: 180px;
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        top: 0;
+        text-indent: -9999px;
+        background: url(../images/v_title.png) left top no-repeat;
+    }
+
+    #VISION_BOX ul.BTN {
+        width: 120px;
+        height: 13px;
+        position: absolute;
+        z-index: 3;
+        right: 8px;
+        bottom: 13px;
+    }
+
+        #VISION_BOX ul.BTN li {
+            width: 13px;
+            height: 13px;
+            display: block;
+            margin-right: 6px;
+            float: left;
+            text-indent: -9999px;
+            background-color: #fff;
+            filter: alpha(opacity=50);
+            opacity: 0.5;
+            zoom: 1;
+            cursor: pointer;
+        }
+
+    #VISION_BOX ul.BOX {
+        width: 6000px;
+        height: 245px;
+        position: absolute;
+    }
+
+        #VISION_BOX ul.BOX li {
+            width: 1000px;
+            height: 245px;
+            float: left;
+        }
+
+#BTN_LEFT {
+    position: absolute;
+    z-index: 4;
+    left: 0;
+    top: 200px;
+}
+
+#BTN_RIGHT {
+    position: absolute;
+    z-index: 4;
+    right: 0;
+    top: 200px;
+}

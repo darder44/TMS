@@ -1,0 +1,77 @@
+@model NavigatorBarModel
+@{
+    ViewBag.Title = "廣播測試";
+    Layout = "_Bestlog";
+}
+@section css {
+    
+}
+@section javascript {
+    <script src="~/js/broadcast.js" asp-append-version="true"></script>
+}
+
+<!--新增、編輯欄位-->
+@section modal {
+    <div class="modal fade" id="dialogNotification" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="googlemaplabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit" data-valid-modal="#dialogNotification">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">推播訊息</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="UserName">使用者</label>
+                            <input type="text" class="form-control" id="UserName" placeholder="" value="" readonly disabled/>
+                        </div>    
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="TimeOut">持續時間(毫秒)</label>
+                            <input type="text" class="form-control" id="TimeOut" placeholder="" value="30000" data-default-val="30000" />
+                        </div>                     
+                    </div>                    
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <label class="control-label" for="Message">訊息</label>
+                            <textarea id="Message" class="form-control" placeholder="推播內容，500字以內" rows="3" maxlength="500" data-valid="true"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                        <span>關閉</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSubmit">
+                        <i class="fa fa-save"></i>
+                        <span>傳送訊息</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section card{
+    <div class="card">
+        <div class="card-header">
+            使用者
+        </div>
+        <div class="card-body">     
+            <div class="row">
+                <div class="form-group col-sm-auto">
+                    <label class="control-label" for="User">使用者</label>
+                    <input class="form-control" data-toggle="lgbSelect" readonly="true" />
+                    <select id="User" data-toggle="lgbSelect" data-default-val="" class="d-none">
+                    </select>
+                </div>
+            </div>       
+            <div class="row">
+                <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                    <button type="button" id="btnSend" class="btn btn-primary btn-fill">
+                        <i class="fa fa-plus" aria-hidden="true"></i><span>傳送訊息</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,138 @@
+@model NormalModel
+@{
+    ViewBag.Title = "貨主主檔";
+    Layout = "_Bestlog";
+}
+@section css {
+
+}
+@section javascript {
+    <script src="~/js/basestorer.js" asp-append-version="true"></script>
+}
+@section modal {
+    <div class="modal fade" id="dialogNew" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit" data-valid-modal="#dialogNew">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">貨主資料維護</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <input type="hidden" id="ID" />
+                        <div class="row">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="StorerKey">貨主</label>
+                                <input type="text" class="form-control" id="StorerKey" maxlength="15" data-valid="true" CheckStorerKey="#StorerKey"/>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="Facility">轉運站</label>
+                                <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" data-valid="true" for="Facility"/>
+                                <select data-toggle="lgbSelect" class="d-none" data-valid="true" id="Facility" >                                
+                                @foreach (var Facility in @Model.Facilities)
+                                {
+                                <option value="@Facility.Value">@string.Format("{0}　{1}", Facility.Value, Facility.Key)</option>
+                                }
+                                </select>
+                            </div>          
+                            <div class="form-group col-sm-12">
+                                <label class="control-label" for="ChineseName">中文名稱</label>
+                                <input type="text" class="form-control" id="ChineseName" maxlength="60" style="width: 100%;"/>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label" for="EnglishName">英文名稱</label>
+                                <input type="text" class="form-control" id="EnglishName" maxlength="60" style="width: 100%;"/>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label" for="Address">地址</label>
+                                <input type="text" class="form-control" id="Address" maxlength="200"style="width: 100%;" />
+                            </div> 
+                            <div class="form-group col-sm-12">
+                                <label class="control-label" for="Description">備註</label>
+                                <input type="text" class="form-control" id="Description" maxlength="60"style="width: 100%;" />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="ShortName">簡稱</label>
+                                <input type="text" class="form-control" id="ShortName" maxlength="20"/>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="Phone">連絡電話</label>
+                                <input type="text" class="form-control" id="Phone" maxlength="18"/>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="Contact">連絡人</label>
+                                <input type="text" class="form-control" id="Contact" maxlength="30"/>
+                            </div>                                                       
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="ShipListReport">出貨單</label>
+                                <input type="text" class="form-control" id="ShipListReport" maxlength="200" data-default-val="LIAH01ShipList"/>
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="StorerStatus">貨主狀態</label>
+                                <input type="text" class="form-control" id="StorerStatus" maxlength="1" data-default-val="1"/>
+                            </div>                            
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                        <span>關閉</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSubmit">
+                        <i class="fa fa-save"></i>
+                        <span>保存</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+@section query{
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="sel_storerkey">貨主</label>
+                <select id="sel_storerkey" multiple="multiple">
+                    <optgroup label="貨主">                    
+                        @foreach (var StorerKey in @Model.StorerKeys)
+                        {
+                            <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                        }                
+                    </optgroup>
+                </select>
+            </div>
+        </div>
+    </form>
+}
+@section gear{
+    <a id="tb_add" href="#" title="新增" asp-auth="add"><i class="fa fa-plus"></i></a>
+    <a id="tb_delete" href="#" title="刪除" asp-auth="del"><i class="fa fa-remove"></i></a>
+    <a id="tb_edit" href="#" title="編輯" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+    <a id="tb_export" href="#" title="匯出資料" asp-auth="Export"><i class="fa fa-download"></i></a>
+}
+@section toolbar{
+    <button id="btn_add" type="button" class="btn btn-success" asp-auth="add"><i class="fa fa-plus" aria-hidden="true"></i><span>新增</span></button>
+    <button id="btn_delete" type="button" class="btn btn-danger" asp-auth="del"><i class="fa fa-remove" aria-hidden="true"></i><span>刪除</span></button>
+    <button id="btn_edit" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil" aria-hidden="true"></i><span>編輯</span></button>
+    <button id="btn_export" type="button" class="btn btn-warning" asp-auth="Export"><i class="fa fa-download"
+        aria-hidden="true"></i><span>匯出資料</span></button>
+}
+@section customToolbar{
+
+}
+@section card{
+    <div class="card">
+        <div class="card-header">
+            貨主主檔
+        </div>
+        <div class="card-body">            
+            <table id="basestorer-table"></table>
+        </div>
+    </div>
+}
+@section tableButtons{
+    <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+    <button class='delInfo btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+}

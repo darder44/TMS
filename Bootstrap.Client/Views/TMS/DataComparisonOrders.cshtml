@@ -1,0 +1,146 @@
+@model NormalModel
+@{
+    ViewBag.Title = "訂單匯入字典表維護";
+    Layout = "_Bestlog";
+}
+@section css {
+
+}
+@section javascript {
+    <script src="~/js/datacomparisonorders.js" asp-append-version="true"></script>
+}
+@section modal {
+    <div class="modal fade" id="dialogNew" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit" data-valid-modal="#dialogNew">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">編輯訂單匯入字典表</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <input type="hidden" id="StorerKeyID" />
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="StorerKey">StorerKey</label>
+                                <input type="text" class="form-control" id="StorerKey" placeholder="不可為空，15字以內" maxlength="15" data-valid="true" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="Facility">Facility</label>
+                                <input type="text" class="form-control" id="Facility" placeholder="100字以內" maxlength="100" data-valid="false" />  
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="ExternOrderKey">ExternOrderKey</label>
+                                <input type="text" class="form-control" id="ExternOrderKey" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="ExternLineNumber">ExternLineNumber</label>
+                                <input type="text" class="form-control" id="ExternLineNumber" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="CustomerOrderkey">CustomerOrderkey</label>
+                                <input type="text" class="form-control" id="CustomerOrderkey" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="OrderType">OrderType</label>
+                                <input type="text" class="form-control" id="OrderType" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="OrderDate">OrderDate</label>
+                                <input type="text" class="form-control" id="OrderDate" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="DeliveryDate">DeliveryDate</label>
+                                <input type="text" class="form-control" id="DeliveryDate" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="PickUpConsigneeKey">PickUpConsigneeKey</label>
+                                <input type="text" class="form-control" id="PickUpConsigneeKey" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="ConsigneeKey">ConsigneeKey</label>
+                                <input type="text" class="form-control" id="ConsigneeKey" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="UrgentMark">UrgentMark</label>
+                                <input type="text" class="form-control" id="UrgentMark" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="ReserveMark">ReserveMark</label>
+                                <input type="text" class="form-control" id="ReserveMark" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="ColdMark">ColdMark</label>
+                                <input type="text" class="form-control" id="ColdMark" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="InvoiceNo">InvoiceNo</label>
+                                <input type="text" class="form-control" id="InvoiceNo" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="OTQty">OTQty</label>
+                                <input type="text" class="form-control" id="OTQty" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="Sku">Sku</label>
+                                <input type="text" class="form-control" id="Sku" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="OrderQty">OrderQty</label>
+                                <input type="text" class="form-control" id="OrderQty" placeholder="100字以內" maxlength="100" data-valid="false" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                        <span>關閉</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSubmit">
+                        <i class="fa fa-save"></i>
+                        <span>保存</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section query{
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="txt_StorerKey">StorerKey</label>
+                <input type="text" class="form-control" id="txt_StorerKey" maxlength="20" />
+            </div>
+            <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                <button type="button" id="btn_query" class="btn btn-primary btn-fill"><i class="fa fa-search"
+                        aria-hidden="true"></i><span>查詢</span></button>
+            </div>
+        </div>
+    </form>
+}
+@section gear{
+    <a id="tb_add" href="#" title="新增" asp-auth="add"><i class="fa fa-plus"></i></a>
+    <a id="tb_delete" href="#" title="刪除" asp-auth="del"><i class="fa fa-remove"></i></a>
+    <a id="tb_edit" href="#" title="編輯" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+}
+@section toolbar{
+    <button id="btn_add" type="button" class="btn btn-success" asp-auth="add"><i class="fa fa-plus" aria-hidden="true"></i><span>新增</span></button>
+    <button id="btn_delete" type="button" class="btn btn-danger" asp-auth="del"><i class="fa fa-remove" aria-hidden="true"></i><span>刪除</span></button>
+    <button id="btn_edit" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil" aria-hidden="true"></i><span>編輯</span></button>
+}
+@section card{
+    <div class="card">
+        <div class="card-header">
+            訂單匯入字典表
+        </div>
+        <div class="card-body">            
+            <table id="datacomparisonorders-table"></table>
+        </div>
+    </div>
+}
+@section tableButtons{
+    <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+    <button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+}

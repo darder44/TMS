@@ -1,0 +1,849 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="1">
+      <bestlogWMS Ref="2" type="Stimulsoft.Report.Dictionary.StiSqlDatabase" isKey="true">
+        <Alias>bestlogWMS</Alias>
+        <ConnectionStringEncrypted>9HrZSN1MksjzSYT4xJzgJ9HEaSthX7vI6hXtieoNpBfVbN3r50oZgUNc/VBnhGITw3jRK0VZqQVrZbkEagHjZ8Nq1ctPcVHxRUS97GMlaW+GfPUozUoTbWJJ0I1NXOAqxMD9oVQD</ConnectionStringEncrypted>
+        <Key>f9b22ccc0c024a56bc27c97a18a88af2</Key>
+        <Name>bestlogWMS</Name>
+      </bestlogWMS>
+    </Databases>
+    <DataSources isList="true" count="1">
+      <LIAH01ShipList Ref="3" type="Stimulsoft.Report.Dictionary.StiSqlSource" isKey="true">
+        <Alias>LIAH01ShipList</Alias>
+        <Columns isList="true" count="59">
+          <value>OrderKey,System.String</value>
+          <value>ExternOrderKey,System.String</value>
+          <value>company,System.String</value>
+          <value>shippingNumber,System.String</value>
+          <value>shippingDocumentType,System.String</value>
+          <value>orderDocumentTypeDescription,System.String</value>
+          <value>categoryCode15,System.String</value>
+          <value>year,System.String</value>
+          <value>month,System.String</value>
+          <value>day,System.String</value>
+          <value>soldToAddressNumber,System.String</value>
+          <value>soldToAddressDescription,System.String</value>
+          <value>phoneAreaCode,System.String</value>
+          <value>phoneNumber,System.String</value>
+          <value>customerOrderNumber,System.String</value>
+          <value>shipToAddressLine1,System.String</value>
+          <value>shipToAddressDescription,System.String</value>
+          <value>shipToAddressLine2,System.String</value>
+          <value>salesmanDescription,System.String</value>
+          <value>orderDocumentType,System.String</value>
+          <value>transferToAddressDescription,System.String</value>
+          <value>shipToAddressNumber,System.String</value>
+          <value>relatedOrderType,System.String</value>
+          <value>relatedOrderNumber,System.String</value>
+          <value>remark,System.String</value>
+          <value>carNumber,System.String</value>
+          <value>carSequence,System.String</value>
+          <value>userId,System.String</value>
+          <value>runTime,System.String</value>
+          <value>promisedDeliveryDate,System.String</value>
+          <value>location,System.String</value>
+          <value>LineNumber,System.String</value>
+          <value>ExternLineNumber,System.String</value>
+          <value>itemNumber,System.String</value>
+          <value>itemDescription,System.String</value>
+          <value>shippingQty,System.Int32</value>
+          <value>unitDescription,System.String</value>
+          <value>unitPrice,System.Decimal</value>
+          <value>extendedPrice,System.Double</value>
+          <value>cubicMeter,System.Double</value>
+          <value>cartons,System.Int32</value>
+          <value>taxableAmount,System.Double</value>
+          <value>tax,System.Double</value>
+          <value>totalAmount,System.Double</value>
+          <value>freight,System.Double</value>
+          <value>capacity,System.Double</value>
+          <value>isPriceVisiabled,System.String</value>
+          <value>taxRate,System.Double</value>
+          <value>unitOfMeasure,System.String</value>
+          <value>TotalPrice,System.Decimal</value>
+          <value>VehicleKey,System.String</value>
+          <value>Driver,System.String</value>
+          <value>Lottable03,System.String</value>
+          <value>RouteNo,System.String</value>
+          <value>DriverPhone,System.String</value>
+          <value>Phone,System.String</value>
+          <value>ShippingEA,System.String</value>
+          <value>BUSR1,System.String</value>
+          <value>SumCSQty,System.Int32</value>
+        </Columns>
+        <CommandTimeout>30</CommandTimeout>
+        <Dictionary isRef="1" />
+        <Key>efce369f48974d989436cd6e643699bb</Key>
+        <Name>LIAH01ShipList</Name>
+        <NameInSource>bestlogWMS</NameInSource>
+        <Parameters isList="true" count="0" />
+        <SqlCommand>select top 1000
+	c.OrderKey, c.ExternOrderKey, c.company, c.shippingNumber
+	, c.shippingDocumentType, c.orderDocumentTypeDescription
+	, c.categoryCode15, c.year, c.month, c.day, c.soldToAddressNumber, c.soldToAddressDescription
+	, c.phoneAreaCode, c.phoneNumber, c.customerOrderNumber, c.shipToAddressLine1
+	, c.shipToAddressDescription, c.shipToAddressLine2, c.salesmanDescription
+	, c.orderDocumentType, c.transferToAddressDescription, c.shipToAddressNumber
+	, c.relatedOrderType, c.relatedOrderNumber, c.remark, c.carNumber, c.carSequence, c.userId, c.runTime
+	, promisedDeliveryDate = convert(char(10), c.promisedDeliveryDate, 111), c.location, 
+	cd.LineNumber, cd.ExternLineNumber, cd.itemNumber, cd.itemDescription, cd.shippingQty
+	, cd.unitDescription, cd.unitPrice, cd.extendedPrice, cd.cubicMeter, cd.cartons
+	, cd.taxableAmount, cd.tax, cd.totalAmount, cd.freight, cd.capacity
+	, cd.isPriceVisiabled, cd.taxRate, cd.unitOfMeasure
+	, TotalPrice = CONVERT(money,(cd.shippingQty * cd.unitPrice)),
+	VehicleKey = '', Driver = ''
+	, Lottable03 = '21052201', RouteNo = '', DriverPhone = '0912345678', Phone = CAST(o.C_Phone1 AS varchar),
+	ShippingEA = CAST(cd.shippingQty*p.casecnt AS varchar), BUSR1 = s.BUSR1, SumCSQty = 0
+from CustOrders_LIAH01 c 
+	join CustOrderDetail_LIAH01 cd on c.orderkey = cd.orderkey
+	join orders o on c.orderkey = o.orderkey
+	join SKU s on s.Sku = cd.itemNumber and s.storerkey = 'LIAH01'
+	join PACK p on p.packkey = s.packkey
+--order by o.orderkey desc
+where c.Externorderkey = '20073799'
+--where c.orderkey = '0000003572'
+--where c.orderkey between '0000005850' and '0000005859'</SqlCommand>
+      </LIAH01ShipList>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Resources isList="true" count="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Key>25830af844804baeb12d4229c6d92259</Key>
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="4" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="4">
+        <GroupHeaderBand1 Ref="5" type="GroupHeaderBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,0.4,22,4.4</ClientRectangle>
+          <Components isList="true" count="16">
+            <Text17 Ref="6" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>2.4,1.1,4.4,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>7dc9001791994dafba4425bc3b51c5bb</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text17</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.shippingNumber)}　{LIAH01ShipList.shippingDocumentType}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text17>
+            <Text18 Ref="7" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,1.5,12.2,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>e8ea6ca9820d4a4f8d1fdfdc2fe0c2f4</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>客戶名稱：{Trim(LIAH01ShipList.soldToAddressNumber)} {Trim(LIAH01ShipList.soldToAddressDescription)}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text19 Ref="8" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,2.1,11.4,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>99b7357a87264af18085ae585e16f8f3</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>送貨地址：{Trim(LIAH01ShipList.shipToAddressLine1)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text20 Ref="9" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,2.6,4.8,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>b99bc3580e2d494181cc3c1c92a8fb13</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>訂單號碼　{Trim(LIAH01ShipList.ExternOrderKey)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+            <Text21 Ref="10" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,0.8,1.8,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>0ad47098ea224efb883063d855688091</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.categoryCode15)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text21>
+            <Text22 Ref="11" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>8.6,1,4.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>0936823153124ac8978615ae8b0763a5</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text22</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.orderDocumentTypeDescription)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text22>
+            <Text23 Ref="12" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.2,1.2,6.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>17c030d047bd498aa9997288f04683be</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text23</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.year)}　　{Trim(LIAH01ShipList.month)}　　　{Trim(LIAH01ShipList.day)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text23>
+            <Text24 Ref="13" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.9,1.4,4.2,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>097bc8af578a4451bb6e9ac6ff1e1e05</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text24</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.customerOrderNumber)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text24>
+            <Text25 Ref="14" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>11.7,1.8,8.4,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>9bf01d82ac6140109ad10a5fb9720e80</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text25</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{IIF(Trim(LIAH01ShipList.orderDocumentType) == "調撥單", Trim(LIAH01ShipList.transferToAddressDescription), Trim(LIAH01ShipList.shipToAddressDescription))}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text25>
+            <Text26 Ref="15" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.9,2.3,6.2,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>dc64f90c6a3442aa9ddb046590602103</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text26</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>業務員：　{Trim(LIAH01ShipList.salesmanDescription)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text26>
+            <Text27 Ref="16" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.9,2.8,6.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>005a790f20c744b79bee136709ac53dd</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text27</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.shipToAddressNumber)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text27>
+            <Text1 Ref="17" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>12.1,1.4,3.8,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>f44f9221b5314247b90786131fc581de</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{IIF(LIAH01ShipList.phoneAreaCode=="", "", "("+Trim(LIAH01ShipList.phoneAreaCode)+")")} {Trim(LIAH01ShipList.phoneNumber)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text112 Ref="18" type="Text" isKey="true">
+              <Border>None;Black;2;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.6,0,4.8,0.6</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>全字庫正楷體,9.75,Bold</Font>
+              <Guid>ac6733d33719467caba4da2accfb21a6</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text112</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>第 {PageNumber} 頁/共 {TotalPageCount} 頁</Text>
+              <TextBrush>Black</TextBrush>
+              <TextQuality>Wysiwyg</TextQuality>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text112>
+            <Text3 Ref="19" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>13.9,3.1,6.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>9ed2b95b64e8495982b9e11e848e5288</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Trim(LIAH01ShipList.relatedOrderType)}　{Trim(LIAH01ShipList.relatedOrderNumber)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text2 Ref="20" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16.6,0.6,4.8,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>be60ead54c474edcb98e8ffb77d32f02</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>到貨日：{Trim(LIAH01ShipList.promisedDeliveryDate)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text35 Ref="21" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.4,3.1,4.8,0.7</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,11,Bold</Font>
+              <Guid>c07e368bbaa04fbc90140bff8ecbb702</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text35</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>客戶電話　{Trim(LIAH01ShipList.Phone)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text35>
+          </Components>
+          <Condition>{LIAH01ShipList.RouteNo}{LIAH01ShipList.OrderKey}</Condition>
+          <Conditions isList="true" count="0" />
+          <Name>GroupHeaderBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <PrintOnAllPages>True</PrintOnAllPages>
+          <ResetPageNumber>True</ResetPageNumber>
+        </GroupHeaderBand1>
+        <EmptyBand1 Ref="22" type="Stimulsoft.Report.Components.StiEmptyBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,5.6,22,0</ClientRectangle>
+          <Components isList="true" count="0" />
+          <Conditions isList="true" count="0" />
+          <Name>EmptyBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+        </EmptyBand1>
+        <DataBand1 Ref="23" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,6.4,22,0.42</ClientRectangle>
+          <Components isList="true" count="7">
+            <Text12 Ref="24" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>2.4,0,7,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>113390ddac5f4c05a8eb90dad788ecfe</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{Trim(LIAH01ShipList.itemDescription)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text11 Ref="25" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>0,0,2.5,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>cc57c3ee249a4c6ab611a662274d5042</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text11</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>　{Trim(LIAH01ShipList.itemNumber)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text11>
+            <Text13 Ref="26" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>8,0,2.7,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,9,Bold</Font>
+              <Guid>f8a2995047dd4343be6bfb763664cf27</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text13</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{IIF(LIAH01ShipList.shippingQty != -1, LIAH01ShipList.shippingQty, "")}{Trim(LIAH01ShipList.unitDescription)}{IIF(LIAH01ShipList.shippingQty != -1,"/"+Trim(LIAH01ShipList.ShippingEA), "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text13>
+            <Text15 Ref="27" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>13.5,0,2.5,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>3890c4a9798a481890a15237eee51a1c</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text15</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{IIF(LIAH01ShipList.extendedPrice != -1, Round(LIAH01ShipList.extendedPrice, 3), "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="28" type="CurrencyFormat" isKey="true">
+                <DecimalDigits>0</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <PositivePattern>0</PositivePattern>
+                <Symbol />
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text15>
+            <Text4 Ref="29" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>16.4,0,3,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>558c6d40dda34283b0d083e1ac3aab9c</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{Trim(LIAH01ShipList.Lottable03)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+            <Text36 Ref="30" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>10.7,0,1.2,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,9,Bold</Font>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text36</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{IIF(LIAH01ShipList.shippingQty != -1,Trim(LIAH01ShipList.BUSR1), "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text36>
+            <Text14 Ref="31" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>10.9,0,2.7,0.42</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>bdcda63377a24d1582b3684e344a7d40</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text14</Name>
+              <Page isRef="4" />
+              <Parent isRef="23" />
+              <Text>{IIF(LIAH01ShipList.unitPrice != -1, Round(LIAH01ShipList.unitPrice,2), "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="32" type="CurrencyFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <PositivePattern>0</PositivePattern>
+                <Symbol />
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text14>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataRelationName isNull="true" />
+          <DataSourceName>LIAH01ShipList</DataSourceName>
+          <Filters isList="true" count="0" />
+          <Name>DataBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Sort isList="true" count="6">
+            <value>ASC</value>
+            <value>LineNumber</value>
+            <value>ASC</value>
+            <value>itemNumber</value>
+            <value>ASC</value>
+            <value>Lottable03</value>
+          </Sort>
+        </DataBand1>
+        <FooterBand1 Ref="33" type="FooterBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,7.62,22,3.1</ClientRectangle>
+          <Components isList="true" count="14">
+            <Text5 Ref="34" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,0.28,6,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>fe699d56491b40cca70202e49e0f87f8</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>訂單號碼：{Trim(LIAH01ShipList.ExternOrderKey)}　{Trim(LIAH01ShipList.orderDocumentType)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text5>
+            <Text6 Ref="35" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,0.68,5.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>a9dddea09a9141c8899ca9dc15ecb28f</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>車號：{Trim(LIAH01ShipList.VehicleKey)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text6>
+            <Text7 Ref="36" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,1.08,6,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>9265a48896e94c6383d695e88ec89c05</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>司機電話：{Trim(LIAH01ShipList.DriverPhone)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text7>
+            <Text8 Ref="37" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,1.48,6,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>833e41acf445438ca4c88d53a4328a6c</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>出貨者：{Trim(LIAH01ShipList.userId)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text8>
+            <Text9 Ref="38" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,1.88,6,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>dd46380a01004a7790d88e73d625ddf8</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>當量　{Sum(LIAH01ShipList.cubicMeter)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text9>
+            <Text10 Ref="39" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>0.8,2.3,0.4,0.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>c475b9659012466d805ff648fcbd087a</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>司
+機</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text10>
+            <Text16 Ref="40" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6,2.3,0.4,0.8</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>6a00fd7ddb41403f922ff214b2b78568</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text16</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>警
+衛</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text16>
+            <Text28 Ref="41" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6,1.08,6.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>ddabc9b0b2af432bab8bad9079721481</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text28</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>貨車長度：</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text28>
+            <Text29 Ref="42" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6,1.48,6.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>eb955d2281a0415fa851dc60c367f5e6</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text29</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>載入時間：{Trim(LIAH01ShipList.runTime)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text29>
+            <Text30 Ref="43" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6,1.88,6.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>22eaf7fdc12644bbaa1a72966593d499</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text30</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>箱數：{Sum(GroupHeaderBand1,LIAH01ShipList.shippingQty)}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text30>
+            <Text31 Ref="44" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>12.6,1.28,3,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>61d857c4101a4a87850f118868ff2c1d</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text31</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <PrintOn>OnlyLastPage</PrintOn>
+              <Text>{IIF(LIAH01ShipList.isPriceVisiabled == "1", LIAH01ShipList.taxableAmount, "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="45" type="CurrencyFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <PositivePattern>0</PositivePattern>
+                <Symbol />
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text31>
+            <Text32 Ref="46" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>12.6,2.08,3,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>c2ea2b0c83ec4c3991ea80e1c198029c</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text32</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <PrintOn>OnlyLastPage</PrintOn>
+              <Text>{IIF(LIAH01ShipList.isPriceVisiabled == "1", LIAH01ShipList.tax, "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="47" type="CurrencyFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <PositivePattern>0</PositivePattern>
+                <Symbol />
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text32>
+            <Text33 Ref="48" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>12.6,2.88,3,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10,Bold</Font>
+              <Guid>3a2b56571ffe451e89e8a21320dd03c8</Guid>
+              <HorAlignment>Right</HorAlignment>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text33</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <PrintOn>OnlyLastPage</PrintOn>
+              <Text>{IIF(LIAH01ShipList.isPriceVisiabled == "1", LIAH01ShipList.totalAmount, "")}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="49" type="CurrencyFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <PositivePattern>0</PositivePattern>
+                <Symbol />
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text33>
+            <Text34 Ref="50" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>6,0.68,6.2,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>新細明體,10.5,Bold</Font>
+              <Guid>687dbeba9ce44273b499974668b3b6fc</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text34</Name>
+              <Page isRef="4" />
+              <Parent isRef="33" />
+              <Text>車次：{LIAH01ShipList.RouteNo}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text34>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>FooterBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <PrintAtBottom>True</PrintAtBottom>
+          <PrintOnAllPages>True</PrintOnAllPages>
+        </FooterBand1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>5f79660adeb24c449e5fcd01fc17e70b</Guid>
+      <LargeHeightFactor>1</LargeHeightFactor>
+      <Margins>1,1,1,1</Margins>
+      <Name>Page1</Name>
+      <PageHeight>14</PageHeight>
+      <PageWidth>24</PageWidth>
+      <PaperSize>Letter</PaperSize>
+      <PrintHeadersFootersFromPreviousPage>True</PrintHeadersFootersFromPreviousPage>
+      <Report isRef="0" />
+      <ResetPageNumber>True</ResetPageNumber>
+      <StretchToPrintArea>True</StretchToPrintArea>
+    </Page1>
+  </Pages>
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>1/12/2021 2:03:11 PM</ReportChanged>
+  <ReportCreated>7/14/2020 2:53:04 PM</ReportCreated>
+  <ReportFile>C:\Users\terry\Desktop\TMS\Bootstrap.Client\Reports\LIAH01ShipList.mrt</ReportFile>
+  <ReportGuid>a3eca2a2affa488a9ed49a97512b939e</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2020.3.2.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

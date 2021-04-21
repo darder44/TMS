@@ -1,0 +1,60 @@
+﻿@model NavigatorBarModel
+<header class="header">
+    <div class="bg"></div>
+    <div class="bg-color">
+        <div class="cloud">
+            <div class="d-flex align-items-center bird">
+                <a id="navbar" href="#" class="sidebar-toggle-box">
+                    <i class="fa fa-bars"></i>
+                    <span id="websiteTitle">@Model.Title</span>
+                </a>
+                <div class="nav">
+                    <div class="dropdown">
+                        <a data-toggle="dropdown" class="shadow-default" href="#">
+                            <i class="fa fa-bell-o"></i>
+                            <span id="msgHeaderMsgBadge" class="badge badge-pill badge-success"></span>
+                        </a>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-arrow arrow-success"></div>
+                            <div id="msgHeaderMsgContent" class="dropdown-header bg-success">您有 <span id="msgHeaderMsg">0</span> 個未讀的消息</div>
+                            <div class="dropdown-footer">
+                                <a href="#">查看所有消息</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dropdown userinfo">
+                    <a data-toggle="dropdown" class="dropdown-toggle shadow-default" href="#">
+                        <img id="headerIcon" alt="" src="@Model.Icon" asp-append-version="true">
+                        <span id="userDisplayName" data-userName="@Model.UserName" class="username text-truncate d-inline-block">@Model.DisplayName</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <div class="dropdown-item">
+                            <div class="d-flex flex-fill align-items-center">
+                                <img src="@Url.Content(Model.Icon)">
+                                <div class="flex-fill">
+                                    <div class="username text-truncate">@Model.DisplayName</div>
+                                    <div>登錄名：@Model.UserName</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-item">
+                            <a href="@Model.ProfilesUrl"><i class=" fa fa-suitcase"></i>個人中心</a>
+                            <a href="@Model.SettingsUrl"><i class="fa fa-cog"></i>設置</a>
+                            <a href="@Model.NotisUrl"><i class="fa fa-bell"></i>通知<span id="logoutNoti" class="badge badge-pill badge-success"></span></a>
+                        </div>
+                        <div class="dropdown-item">
+                            <a href="@Model.LogoutUrl"><i class="fa fa-key"></i>登出</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <nav aria-label="breadcrumb">
+        <div class="breadcrumb">
+            <div class="breadcrumb-item"><a href="~/Home/Index"><i class="fa fa-home"></i>首頁</a></div>
+            <div class="breadcrumb-item d-none" id="breadNav"></div>
+        </div>
+    </nav>
+</header>

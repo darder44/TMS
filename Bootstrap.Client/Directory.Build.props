@@ -1,0 +1,35 @@
+﻿<Project>
+
+  <Import Project="..\Directory.Build.props" />
+
+  <PropertyGroup>
+    <ReportsDirectory>.\Reports</ReportsDirectory>
+    <FontsDirectory>.\Fonts</FontsDirectory>
+    <LocalizationDirectory>.\Localization</LocalizationDirectory>
+    <DocumentationFile>$(MSBuildProjectName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <Target Condition=" $(IsWebProject) == true " Name="PostPublish" AfterTargets="Publish">
+    <Message Text="Publish Reports file -> $(PublishDir)" Importance="high" />
+    <CreateItem Include="$(ReportsDirectory)\*.*">
+      <Output TaskParameter="Include" ItemName="ReportsDir" />
+    </CreateItem>
+    <Copy Condition="'$(OS)' == 'Windows_NT'" DestinationFolder="$(PublishDir)\Reports" SourceFiles="@(ReportsDir)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(OS)' == 'UNIX'" DestinationFolder="$(PublishDir)/Reports" SourceFiles="@(ReportsDir)" SkipUnchangedFiles="true" />
+
+    <Message Text="Publish Fonts file -> $(PublishDir)" Importance="high" />
+    <CreateItem Include="$(FontsDirectory)\*.*">
+      <Output TaskParameter="Include" ItemName="FontsDir" />
+    </CreateItem>
+    <Copy Condition="'$(OS)' == 'Windows_NT'" DestinationFolder="$(PublishDir)\Fonts" SourceFiles="@(FontsDir)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(OS)' == 'UNIX'" DestinationFolder="$(PublishDir)/Fonts" SourceFiles="@(FontsDir)" SkipUnchangedFiles="true" />
+    
+    <Message Text="Publish Localization file -> $(PublishDir)" Importance="high" />
+    <CreateItem Include="$(LocalizationDirectory)\*.*">
+      <Output TaskParameter="Include" ItemName="LocalizationDir" />
+    </CreateItem>
+    <Copy Condition="'$(OS)' == 'Windows_NT'" DestinationFolder="$(PublishDir)\Localization" SourceFiles="@(LocalizationDir)" SkipUnchangedFiles="true" />
+    <Copy Condition="'$(OS)' == 'UNIX'" DestinationFolder="$(PublishDir)/Localization" SourceFiles="@(LocalizationDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+</Project>

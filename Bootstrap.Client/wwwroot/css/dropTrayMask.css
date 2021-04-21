@@ -1,0 +1,36 @@
+.dropTrayMask {
+    background-color: black;
+    z-index: 9999;
+    opacity: .7;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+.dropTrayMask.hide {
+    display: none;
+}
+
+.dropTrayLoader:before {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    border: 2px solid white;
+    border-color: transparent white transparent white;
+    border-radius: 50%;
+    animation: loader 1s linear infinite;
+}
+
+@keyframes loader {
+    0% {
+        transform: translate(-50%,-50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%,-50%) rotate(360deg);
+    }
+}

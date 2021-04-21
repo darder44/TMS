@@ -1,0 +1,29 @@
+﻿@model ModelBase
+@{
+    ViewBag.Title = Model.Title;
+}
+@section css {
+    <style>
+
+        .main-content {
+            position: fixed;
+        }
+
+            .main-content h4 {
+                color: black;
+                margin-top: 0;
+            }
+
+            .main-content .main-header {
+                display: none;
+            }
+    </style>
+}
+@section javascript {
+    <script>
+        $(function () {
+            $('.main-content').addClass('welcome-bg');
+        });
+    </script>
+}
+<h4>歡迎使用 @Model.Title</h4>

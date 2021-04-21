@@ -1,0 +1,192 @@
+@model NormalModel
+@{
+    ViewBag.Title = "訂單切割";
+    Layout = "_Normal";
+}
+@section css {
+    
+}
+@section javascript {
+    <script src="~/js/normalcutorders.js" asp-append-version="true"></script>
+}
+@section modalheadertitle {
+訂單切割
+}
+@section headerCardTitle {
+訂單資料
+}
+@section headerCardBody {
+}
+@section detailCardTitle {
+來源明細
+}
+@section detailCardBody {
+    <form class="form-inline">
+        <input type="hidden" id="OrderLineNumber" />
+        <div class="row">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="Sku">品號</label>
+                <input type="text" class="form-control" id="Sku" maxlength="100" data-valid="true" readonly/>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="Descr">品名</label>
+                <input type="text" class="form-control" id="Descr" maxlength="200" data-valid="true" readonly />
+            </div>                    
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CaseCnt">箱入數</label>
+                <input type="number" class="form-control" id="CaseCnt" min="0" data-valid="true" readonly/>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="Pallet">板入數</label>
+                <input type="number" class="form-control" id="Pallet" min="0" data-valid="true" readonly/>
+            </div>
+        </div>
+        <div class="row">                     
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CaseQty">訂單箱數</label>
+                <input type="number" class="form-control" id="CaseQty" min="0" data-valid="true" readonly/>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="PalletQty">訂單板數</label>
+                <input type="number" class="form-control" id="PalletQty" min="0" data-valid="true" readonly/>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="OrderCube">訂單材積</label>
+                <input type="number" class="form-control" id="OrderCube" min="0" data-valid="true" readonly/>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="OrderWeight">訂單重量</label>
+                <input type="number" class="form-control" id="OrderWeight" min="0" data-valid="true" readonly/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CutCase">切割訂單箱數</label>
+                <input type="number" class="form-control" id="CutCase" min="1" data-valid="true" title="請輸入小於訂單箱數的數值" />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CutPallet">切割訂單板數</label>
+                <input type="number" class="form-control" id="CutPallet" readonly />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CutCube">切割訂單材積</label>
+                <input type="number" class="form-control" id="CutCube" readonly />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="CutWeight">切割訂單重量</label>
+                <input type="number" class="form-control" id="CutWeight" readonly />
+            </div>
+        </div>
+    </form>
+}
+@section detailTable {
+    <label>分割明細</label>
+    <div id="CutOrderDetailCard" class="row">
+        <div class="col-12">
+            <table id="CutOrderDetail-table"></table>
+        </div>
+    </div>
+    <form class="form-inline">
+        <label>分割總數計算</label>
+        <div class="row">
+            <div class="form-group col-4">
+                <label>總箱數：</label><label id="totalCase" class="text-success"></label>
+            </div>
+            <div class="form-group col-4">
+                <label>總材積：</label><label id="totalCube" class="text-success"></label>
+            </div>
+            <div class="form-group col-4">
+                <label>總重量：</label><label id="totalWeight" class="text-success"></label>
+            </div>
+        </div>
+    </form>
+}
+@section modal {
+}
+@section query{ 
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="sel_storerkey">貨主</label>
+                <select id="sel_storerkey" multiple="multiple">
+                    <optgroup label="貨主">                    
+                        @foreach (var StorerKey in @Model.StorerKeys)
+                        {
+                            <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                        }                
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="txt_TMSKey">訂單號碼</label>
+                <input type="text" class="form-control" id="txt_TMSKey" maxlength="60" data-default-val="" />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="txt_ExternOrderKey">貨主單號</label>
+                <input type="text" class="form-control" id="txt_ExternOrderKey" maxlength="60" data-default-val="" />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="txt_ConsigneeKey">客戶編號</label>
+                <input type="text" class="form-control" id="txt_ConsigneeKey" maxlength="60" data-default-val="" />
+            </div>
+            <div class="form-group col-sm-auto">
+                <label class="control-label" for="txt_Zip">郵遞區號</label>
+                <input type="text" class="form-control" id="txt_Zip" maxlength="60" data-default-val="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6 col-lg-auto">
+                <label class="control-label" for="txt_OrderDate_Start">訂單日期(起)</label>
+                <div class="input-group input-append datepicker">
+                    <input id="txt_OrderDate_Start" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-lg-auto">
+                <label class="control-label" for="txt_OrderDate_End">訂單日期(訖)</label>
+                <div class="input-group input-append datepicker">
+                    <input id="txt_OrderDate_End" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-sm-6 col-lg-auto">
+                <label class="control-label" for="txt_DeliveryDate_Start">到貨日期(起)</label>
+                <div class="input-group input-append datepicker">
+                    <input id="txt_DeliveryDate_Start" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+                </div>
+            </div>
+            <div class="form-group col-sm-6 col-lg-auto">
+                <label class="control-label" for="txt_DeliveryDate_End">到貨日期(訖)</label>
+                <div class="input-group input-append datepicker">
+                    <input id="txt_DeliveryDate_End" class="form-control" size="16" type="text" value="" readonly data-default-val="" >
+                </div>
+            </div>
+        </div>
+    </form>
+}
+@section gear{
+    <a id="tb_cutorders" href="#" title="切割" asp-auth="cutorders"><i class="fa fa-cut"></i></a>
+}
+@section toolbar {
+    <button id="btn_cutorders" type="button" class="btn btn-primary" asp-auth="cutorders"><i class="fa fa-cut" aria-hidden="true"></i><span>切割</span></button>
+}
+@section customtoolbar {
+}
+@section card{
+    <div class="card">
+         <div class="card-header">
+             訂單切割
+         </div>
+         <div class="card-body">
+            <table id="normalcutorders-table"></table>
+         </div>
+    </div>    
+    <div id="cutorderdetailtableButtons" class="d-none">
+        <div class='btn-group'>
+            <button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+        </div>
+    </div>
+}
+@section tableButtons{
+    <button class='cutorders btn btn-sm btn-success' asp-auth="cutorders"><i class='fa fa-cut'></i><span>切割</span></button>
+}

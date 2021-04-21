@@ -1,0 +1,226 @@
+@model NormalModel
+@{
+ViewBag.Title = "排車作業報表";
+Layout = "_BestLog";
+}
+@section css {
+}
+@section javascript {
+    <script src="~/js/reportvllroutelist.js" asp-append-version="true"></script>
+}
+
+@section modal{
+<div class="modal fade" id="reportshipment-dialogAdvancedSearch" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="mySearchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySearchModalLabel">查詢條件</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body modal-query">
+                <form class="form-inline">
+                    <div class="row">
+                        <div class="form-group col-sm-auto">
+                            <label class="control-label" for="sel_storerkey">貨主</label>
+                            <select id="sel_storerkey" multiple="multiple">
+                                <optgroup label="貨主">
+                                    @foreach (var StorerKey in @Model.StorerKeys)
+                                    {
+                                    <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                                    }
+                                </optgroup>
+                            </select>
+                        </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="txt_RouteNo">路線編號</label>
+                                <input type="text" class="form-control" id="txt_RouteNo" maxlength="20"
+                                    data-default-val="" />
+                            </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6 col-lg-auto">
+                            <label class="control-label" for="txt_DoRouteDate_Start">出車日期(起)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DoRouteDate_Start" class="form-control" size="16" type="text" value="@DateTime.Today.ToString("yyyy/MM/dd")"
+                                    readonly data-default-val="">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-lg-auto">
+                            <label class="control-label" for="txt_DoRouteDate_End">出車日期(訖)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DoRouteDate_End" class="form-control" size="16" type="text"   readonly data-default-val="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-6 col-lg-auto">
+                            <label class="control-label" for="txt_DeliveryDate_Start">到貨日期(起)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DeliveryDate_Start" class="form-control" size="16" type="text" value=""
+                                    readonly data-default-val="">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6 col-lg-auto">
+                            <label class="control-label" for="txt_DeliveryDate_End">到貨日期(訖)</label>
+                            <div class="input-group input-append datepicker">
+                                <input id="txt_DeliveryDate_End" class="form-control" size="16" type="text" value=""
+                                    readonly data-default-val="">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_reset-reportshipment" class="btn btn-info btn-fill"><i
+                        class="fa fa-trash-o" aria-hidden="true"></i><span>重置</span></button>
+                <button type="button" id="btn_query-reportshipment" class="btn btn-primary btn-fill"><i
+                        class="fa fa-search" aria-hidden="true"></i><span>查詢</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="dialogPrint" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content" data-toggle="LgbValidate" data-valid-button="#btnSubmit" data-valid-modal="#dialogNew">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">列印方式</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline">
+                        <div class="row">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="txt_PrintMode">列印方式</label>
+                                <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" data-valid="true" readonly="true" />
+                                <select data-toggle="lgbSelect" class="d-none" data-valid="true" id="txt_PrintMode" data-default-val="">                                
+                                    <option value="ReportVLLRouteList">裝載總表</option>
+                                    <option value="ReportVLLRouteListDetail">裝載明細表</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        <i class="fa fa-times"></i>
+                        <span>關閉</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSubmit_PrintMode">
+                        <i class="fa fa-save"></i>
+                        <span>列印裝載報表</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!--查詢-->
+@section query{
+<form class="form-inline">
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_VLL_DoRouteDate_Start">出車日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_VLL_DoRouteDate_Start" class="form-control" size="16" type="text" readonly
+                    value="@DateTime.Today.ToString("yyyy/MM/dd")" data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_VLL_DoRouteDate_End">出車日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_VLL_DoRouteDate_End" class="form-control" size="16" type="text" readonly data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_RouteNo_Start">路線編號(起)</label>
+            <input type="text" class="form-control" id="txt_RouteNo_Start" maxlength="11" placeholder="請輸入路線編號" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_RouteNo_End">路線編號(迄)</label>
+            <input type="text" class="form-control" id="txt_RouteNo_End" maxlength="11" placeholder="請輸入路線編號" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_WaveKey">WaveKey</label>
+            <input type="text" class="form-control" id="txt_WaveKey" data-default-val="" />
+        </div>
+    </div>
+</form>
+}
+@section gear{
+<a id="tb_printReport" href="#" title="報表列印" asp-auth="printReport"><i class="fa fa-print"></i></a>
+<a id="tb_export" href="#" title="匯出資料" asp-auth="Export"><i class="fa fa-download"></i></a>
+
+}
+@section toolbar{
+<button id="btn_printReport" type="button" class="btn btn-info" asp-auth="printReport"><i class="fa fa-print" aria-hidden="true"></i><span>報表列印</span></button>
+<button id="btn_export" type="button" class="btn btn-warning" asp-auth="Export"><i class="fa fa-download" aria-hidden="true"></i><span>匯出資料</span></button>
+}
+
+@section customToolbar {
+    <div id="toolbar-reportshipment" class="d-none">
+        <div class="gear btn-group">
+            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-gear"></i></button>
+            <div class="dropdown-menu">
+                <a id="tb_printReport_ship" href="#" title="報表列印" asp-auth="printReport"><i class="fa fa-print"></i></a>
+            </div>
+        </div>
+        <div class="toolbar btn-group">
+           <button id="btn_printReport_ship" type="button" class="btn btn-info" asp-auth="printReport"><i class="fa fa-print" aria-hidden="true"></i><span>報表列印</span></button>
+        </div>
+    </div>  
+
+}
+
+@section card{
+<div class="card">
+    <div class="card-header">
+        排車作業報表
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <nav>
+                    <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-reportvllroutelist-tab" data-toggle="tab"
+                            href="#nav-reportvllroutelist" role="tab" aria-controls="nav-reportvllroutelist"
+                            aria-selected="true">裝載總表</a>
+                        <a class="nav-item nav-link" id="nav-reportshipment-tab" data-toggle="tab"
+                            href="#nav-reportshipment" role="tab" aria-controls="nav-reportshipment"
+                            aria-selected="false">出貨單</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-reportvllroutelist" role="tabpanel"
+                        aria-labelledby="nav-reportvllroutelist-tab">
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="reportvllroutelist-table"></table>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="nav-reportshipment" role="tabpanel"
+                        aria-labelledby="nav-reportshipment-tab">
+                        <div class="col-12 mr-3 mt-3 mb-3">
+                            <table id="reportshipment-table"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+}
+@section tableButtons{
+    <button class='printReport btn btn-sm btn-primary' asp-auth="printReport"><i class='fa fa-print'></i><span>報表列印</span></button>
+}
+
+@section customTableButtons{
+    <div id="tableButtons_ship" class="d-none">
+    <div class='btn-group'>
+        <button class='printReport btn btn-sm btn-primary' asp-auth="printReport"><i class='fa fa-print'></i><span>報表列印</span></button>
+    </div>
+</div>
+}

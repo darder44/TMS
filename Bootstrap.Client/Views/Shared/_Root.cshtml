@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="~/favicon.png"/> 
+    <title>@ViewBag.Title</title>
+    <style>
+        #reconnect-modal {
+            position: fixed;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            z-index: 9999;
+            display: none;
+            overflow: hidden;
+            background-color: rgb(0, 0, 0);
+            opacity: 0.8;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #reconnect-modal.show {
+            display: block;
+        }
+    </style>
+    @RenderSection("css", false)
+    <!--[if lt IE 10 ]>
+        <link href="../css/IE8.css" rel="stylesheet" />
+    <![endif]-->
+</head>
+<body class="trans-mute">
+    <!--[if lt IE 10 ]>
+    <div id="ieAlert" class="alert alert-danger alert-dismissible">
+        <div>你的瀏覽器版本太低，不能完美的支持本系統，請升級到至少IE10 <a href="../IE/IE10.exe" target="_blank">本地下載</a> <a href="https://support.microsoft.com/zh-cn/help/17621/internet-explorer-downloads" target="_blank">微軟下載</a>，或者使用Chrome瀏覽器 <a href="../Software/ChromeSetup.exe" target="_blank">本地下載</a></div>
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">關閉</span></button>
+    </div>
+    <![endif]-->
+    @RenderBody()
+    <a id="pathBase" href="~/" hidden></a>
+    <div id="reconnect-modal">
+        <div class="col d-flex justify-content-center">
+            <h5 style="margin-top: 20px">與伺服器連線中斷...<a href="">點我重新整理</a></h5>
+        </div>
+    </div>
+    <!-- jQuery文件。務必在bootstrap.min.js 之前引入 -->
+    <environment include="Development">
+        <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jqueryui/jquery-ui.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/jquery/jquery.min.js"></script>
+        <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+    </environment>
+    <script src="~/lib/store/store.min.js"></script>
+    <script src="~/lib/dragtable/jquery.dragtable.js"></script>
+    <script src="~/js/notifi.js" asp-append-version="true"></script>
+    @RenderSection("javascript", false)
+</body>
+</html>

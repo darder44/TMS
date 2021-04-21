@@ -1,0 +1,313 @@
+@model NormalModel
+<div id="SignOrders" class="tab-content-item" data-toggle="LgbValidate" data-valid-button="#btnSignOrdersSubmit"
+    data-valid-modal="#dialogSignOrders">
+    <div class="card">
+        <div class="card-header">
+            訂單資料
+        </div>
+        <div class="card-body">
+            <form class="form-inline">
+                <div class="row">
+                    <input hidden id="ConfirmNotes" />
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="StorerKey">貨主編號</label>
+                        <input type="text" class="form-control" data-toggle="lgbSelect" data-valid="true" />
+                        <select data-toggle="lgbSelect" class="d-none" id="StorerKey">
+                            @foreach (var StorerKey in @Model.StorerKeys)
+                            {
+                            <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value,
+                                StorerKey.Key)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="RouteNo">路線編號</label>
+                        <input type="text" class="form-control" id="RouteNo" maxlength="15" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Facility">倉別</label>
+                        <input type="text" class="form-control" id="Facility" maxlength="20" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="TMSKey">訂單號碼</label>
+                        <input type="text" class="form-control" id="TMSKey" maxlength="10" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ExternOrderKey">貨主單號</label>
+                        <input type="text" class="form-control" id="ExternOrderKey" maxlength="30" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="OrderType">訂單類別</label>
+                        <input type="text" class="form-control" id="OrderType" maxlength="30" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="OrderDate">訂單日期</label>
+                        <input type="text" class="form-control" id="OrderDate" maxlength="20" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="DeliveryDate">到貨日期</label>
+                        <input type="text" class="form-control" id="DeliveryDate" maxlength="20" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Zip">郵遞區號</label>
+                        <input type="text" class="form-control" id="Zip" maxlength="18" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Contact">聯絡人</label>
+                        <input type="text" class="form-control" id="Contact" maxlength="60" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Phone">電話</label>
+                        <input type="text" class="form-control" id="Phone" maxlength="60" data-valid="false" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="UrgentMark">急單</label>
+                        <input type="text" class="form-control" id="UrgentMark" maxlength="1" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ReserveMark">專車</label>
+                        <input type="text" class="form-control" id="ReserveMark" maxlength="1" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ColdMark">冷藏</label>
+                        <input type="text" class="form-control" id="ColdMark" maxlength="1" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="CustomerOrderKey">採購單號</label>
+                        <input type="text" class="form-control" id="CustomerOrderKey" maxlength="30"
+                            data-valid="false" />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="InvBack">發票回傳</label>
+                        <input type="text" class="form-control" data-toggle="lgbSelect" maxlength="10" />
+                        <select data-toggle="lgbSelect" class="d-none" id="InvBack" data-default-val="N">
+                            <option value="N">未回傳</option>
+                            <option value="Y">已回傳</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ConsigneeKey">客戶編號</label>
+                        <input type="text" class="form-control" id="ConsigneeKey" maxlength="100" data-valid="true"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="SdnSendDate">簽單回傳日期</label>
+                        <div class="input-group input-append datepicker">
+                            <input id="SdnSendDate" class="form-control" size="16" type="text" value="" readonly
+                                data-valid="false" />
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label" for="ShortName">客戶簡稱</label>
+                        <input type="text" class="form-control w-100" id="ShortName" maxlength="60" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label" for="ShipToAddress">到貨地址</label>
+                        <input type="text" class="form-control w-100" id="ShipToAddress" maxlength="200"
+                            data-valid="true" readonly />
+                    </div>
+                </div>
+                <div id="rowPickUp" class="row">
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="PickUpConsigneeKey">提貨客編</label>
+                        <input type="text" class="form-control" id="PickUpConsigneeKey" maxlength="10"
+                            data-valid="false" readonly />
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label" for="PickUpName">提貨名稱</label>
+                        <input type="text" class="form-control w-100" id="PickUpName" maxlength="60" data-valid="false"
+                            readonly />
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label class="control-label" for="PickUpAddress">提貨地址</label>
+                        <input type="text" class="form-control" id="PickUpAddress" maxlength="200" data-valid="false"
+                            readonly style="width: 100%;" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-12">
+                        <label for="CustHandle">客戶回覆處理方式</label>
+                        <textarea id="CustHandle" class="form-control mt-2" style="width: 100%;" placeholder="255字以內"
+                            rows="3" maxlength="255"></textarea>
+                    </div>
+                    <div class="form-group col-12">
+                        <label for="SdnNotes">簽單備註</label>
+                        <textarea id="SdnNotes" class="form-control mt-2" style="width: 100%;" placeholder="255字以內"
+                            rows="3" maxlength="255"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="card" id="SignOrdersDetailCard" data-toggle="LgbValidate"
+        data-valid-button="#btn_SignOrders_UpdateDetail" data-valid-modal="#dialogSignOrders">
+        <div class="card-header">
+            訂單明細
+        </div>
+        <div class="card-body">
+            <form class="form-inline">
+                <input type="hidden" id="OrderLineNumber" />
+                <div class="row">
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Sku">品號</label>
+                        <input type="text" class="form-control" id="Sku" maxlength="100" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Descr">品名</label>
+                        <input type="text" class="form-control" id="Descr" maxlength="200" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="CaseCnt">箱入數</label>
+                        <input type="number" class="form-control" id="CaseCnt" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Pallet">板入數</label>
+                        <input type="number" class="form-control" id="Pallet" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Cube">總材積</label>
+                        <input type="number" class="form-control" id="Cube" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="Weight">總重量</label>
+                        <input type="number" class="form-control" id="Weight" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="StdCube">小單位材積</label>
+                        <input type="number" class="form-control" id="StdCube" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="StdWeight">小單位重量</label>
+                        <input type="number" class="form-control" id="StdWeight" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="OrderQty">訂單個數</label>
+                        <input type="number" class="form-control" id="OrderQty" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="CaseQty">訂單箱數</label>
+                        <input type="number" class="form-control" id="CaseQty" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ShipQty">出貨個數</label>
+                        <input type="number" class="form-control" id="ShipQty" min="0" data-valid="true" readonly />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="ShipCaseQty">出貨箱數</label>
+                        <input type="number" class="form-control" id="ShipCaseQty" min="0" data-valid="true" readonly />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="SignQty">簽收個數</label>
+                        <input type="number" class="form-control" id="SignQty" min="0" data-valid="true" />
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="SignCaseQty">簽收箱數</label>
+                        <input type="number" class="form-control" id="SignCaseQty" min="0" data-valid="false" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="RSCCode">異常原因</label>
+                        <input type="text" class="form-control" data-toggle="lgbSelect" CheckRSCCode="#RSCCode"
+                            data-valid="true" />
+                        <select data-toggle="lgbSelect" class="d-none" id="RSCCode">
+                            <option value="">請選擇...</option>
+                            @foreach (var RSCCode in Model.RSCCode)
+                            {
+                            <option value="@RSCCode.Value">@string.Format("{0}　{1}", RSCCode.Value, RSCCode.Key)
+                            </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="RBCCode">責任歸屬</label>
+                        <input type="text" class="form-control" data-toggle="lgbSelect" CheckRBCCode="#RBCCode"
+                            data-valid="true" />
+                        <select data-toggle="lgbSelect" class="d-none" id="RBCCode">
+                            <option value="">請選擇...</option>
+                            @foreach (var RBCCode in Model.RBCCode)
+                            {
+                            <option value="@RBCCode.Value">@string.Format("{0}　{1}", RBCCode.Value, RBCCode.Key)
+                            </option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-auto">
+                        <label class="control-label" for="RBCName">責屬人</label>
+                        <input type="text" class="form-control" id="RBCName" maxlength="60" data-valid="false" />
+                    </div>
+                </div>
+            </form>
+            <form class="form-inline">
+                <div class="row">
+                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                        <button type="button" id="btn_SignOrders_CancelUpdate" class="btn btn-secondary btn-fill">
+                            <i class="fa fa-times" aria-hidden="true"></i><span>取消</span></button>
+                        <button type="button" id="btn_SignOrders_UpdateDetail"
+                            class="btn btn-success btn-fill ml-3 valid-detail-button">
+                            <i class="fa fa-save" aria-hidden="true"></i><span>保存</span></button>
+                    </div>
+                </div>
+            </form>
+            <label>明細</label>
+            <table id="signorders-table"></table>
+
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <form class="form-inline">
+        <div class="row">
+            <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                <label class="control-label" for="SignStatus">簽單狀態</label>
+                <input type="text" class="form-control" data-toggle="lgbSelect" data-valid="true" />
+                <select data-toggle="lgbSelect" class="d-none" id="SignStatus">
+                    <option value="">未維護</option>
+                    <option value="5">正常訂單</option>
+                    <option value="6">異常訂單</option>
+                    <option value="7">未出訂單</option>
+                </select>
+                <button type="button" class="btn btn-primary ml-3" id="btnSignOrdersSubmit">
+                    <i class="fa fa-save"></i>
+                    <span>提交</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div id="toolbar-signorders" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i
+                class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            <a id="tb_edit_signorders" href="#" title="編輯" asp-auth="edit"><i class="fa fa-pencil"></i></a>
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        <button id="btn_edit_signorders" type="button" class="btn btn-primary" asp-auth="edit"><i class="fa fa-pencil"
+                aria-hidden="true"></i><span>編輯</span></button>
+    </div>
+</div>
+
+<div id="signordersButtons" class="d-none">
+    <div class='btn-group'>
+        <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+    </div>
+</div>

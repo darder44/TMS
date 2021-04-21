@@ -1,0 +1,37 @@
+@model HeaderBarModel
+@{
+    Layout = "_Root";
+}
+@section css {
+    <environment include="Development">
+        <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/jquery-editable-select-master/jquery-editable-select.css" rel="stylesheet" asp-append-version="true"/>
+    </environment>
+    <environment exclude="Development">
+        <link href="~/lib/twitter-bootstrap/css/bootstrap.min.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/jquery-editable-select-master/jquery-editable-select.min.css" rel="stylesheet" asp-append-version="true"/>
+    </environment>
+    @RenderSection("css", false)
+    <link href="~/css/theme.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/theme-responsive.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/site.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/site-responsive.css" rel="stylesheet" asp-append-version="true" />
+}
+@section javascript {
+    <environment include="Development">
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-editable-select-master/jquery-editable-select.js" asp-append-version="true"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery-editable-select-master/jquery-editable-select.min.js" asp-append-version="true"></script>
+    </environment>
+    <script src="~/lib/longbow/longbow.common.js" asp-append-version="true"></script>
+    @RenderSection("javascript", false)
+}
+@await Html.PartialAsync("Header")
+@RenderBody()
+@await Html.PartialAsync("Footer")
+@RenderSection("modal", false)

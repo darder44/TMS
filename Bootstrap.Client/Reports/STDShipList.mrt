@@ -1,0 +1,561 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<StiSerializer version="1.02" type="Net" application="StiReport">
+  <Dictionary Ref="1" type="Dictionary" isKey="true">
+    <BusinessObjects isList="true" count="0" />
+    <Databases isList="true" count="1">
+      <bestlogWMS Ref="2" type="Stimulsoft.Report.Dictionary.StiSqlDatabase" isKey="true">
+        <Alias>bestlogWMS</Alias>
+        <ConnectionStringEncrypted>9HrZSN1MksjzSYT4xJzgJ9HEaSthX7vI6hXtieoNpBfVbN3r50oZgUNc/VBnhGITw3jRK0VZqQVrZbkEagHjZ8Nq1ctPcVHxRUS97GMlaW+GfPUozUoTbWJJ0I1NXOAqxMD9odUD</ConnectionStringEncrypted>
+        <Key>38ca0e277c2e477db45b2deb4de3c92d</Key>
+        <Name>bestlogWMS</Name>
+      </bestlogWMS>
+    </Databases>
+    <DataSources isList="true" count="1">
+      <STDShipList Ref="3" type="Stimulsoft.Report.Dictionary.StiSqlSource" isKey="true">
+        <Alias>STDShipList</Alias>
+        <Columns isList="true" count="33">
+          <value>storerKey,System.String</value>
+          <value>StorerName,System.String</value>
+          <value>RouteNo,System.String</value>
+          <value>DoRouteDate,System.String</value>
+          <value>DeliveryDate,System.String</value>
+          <value>TmsKey,System.String</value>
+          <value>ExternOrderKey,System.String</value>
+          <value>CustomerOrderKey,System.String</value>
+          <value>OrderType,System.String</value>
+          <value>FullName,System.String</value>
+          <value>Address,System.String</value>
+          <value>ConsigneeKey,System.String</value>
+          <value>Sku,System.String</value>
+          <value>Phone,System.String</value>
+          <value>Notes,System.String</value>
+          <value>Driver,System.String</value>
+          <value>VehicleKey,System.String</value>
+          <value>ExternLineNumber,System.Int32</value>
+          <value>Susr3,System.String</value>
+          <value>Descr,System.String</value>
+          <value>Lottable06,System.String</value>
+          <value>ShipCaseQty,System.Double</value>
+          <value>TotalShipQty,System.Int32</value>
+          <value>Busr3,System.String</value>
+          <value>ShipQty,System.Double</value>
+          <value>Busr1,System.String</value>
+          <value>OrderQty,System.Int32</value>
+          <value>Cube,System.Double</value>
+          <value>Weight,System.Double</value>
+          <value>ShipToName,System.String</value>
+          <value>ContactPhone,System.String</value>
+          <value>Contact,System.String</value>
+          <value>CaseCnt,System.Double</value>
+        </Columns>
+        <CommandTimeout>30</CommandTimeout>
+        <Dictionary isRef="1" />
+        <Key>16d620982e874486a7085811dd3de3c0</Key>
+        <Name>STDShipList</Name>
+        <NameInSource>bestlogWMS</NameInSource>
+        <Parameters isList="true" count="0" />
+        <SqlCommand>select top 100 storerKey = rtrim(o.StorerKey)
+	,StorerName = rtrim(bs.ChineseName)
+	,RouteNo = rtrim(rh.RouteNo)
+	,DoRouteDate = convert(char(10),br.DoRouteDate,111)
+	,DeliveryDate = convert(char(10),o.DeliveryDate,111)
+	,TmsKey = rtrim(o.Tmskey)
+	,ExternOrderKey = rtrim(o.ExternOrderKey)
+	,CustomerOrderKey = rtrim(o.CustomerOrderKey)
+	,OrderType = rtrim(o.OrderType)
+	,FullName = rtrim(bc.FullName)
+	,Address = rtrim(o.ShipToAddress)
+	,ConsigneeKey = rtrim(o.ConsigneeKey)
+	,Sku = rtrim(od.Sku)
+	,Phone = rtrim(bc.Phone)
+	,Notes = rtrim(o.Notes)
+	,Driver = rtrim(br.Driver)
+	,VehicleKey = rtrim(br.VehicleKey)
+	,ExternLineNumber = CAST(rtrim(od.ExternLineNumber) AS INT)
+	,Susr3 = rtrim(s.Susr3)
+	,Descr = rtrim(od.Descr)
+	,Lottable06 = rtrim(ods.Lottable06)
+	,ShipCaseQty = sum(case when od.CaseCnt = 0 then 0 else floor(od.ShipQty / od.CaseCnt) end)
+	,TotalShipQty = sum(od.ShipQty)
+		,Busr3 = rtrim(s.Busr3)
+		,ShipQty = sum(case when od.CaseCnt = 0 then od.ShipQty else od.ShipQty - floor(od.ShipQty / od.CaseCnt) * od.CaseCnt end)
+		,Busr1 = rtrim(s.Busr1)
+		,OrderQty = sum(od.OrderQty)
+		,Cube = round(sum(od.ShipQty * od.StdCube),2)
+		,Weight = round(sum(od.ShipQty * od.StdWeight),2)
+		,ShipToName = rtrim(o.ShortName)
+		,ContactPhone = rtrim(o.Phone)
+		,Contact = rtrim(o.Contact)
+		,CaseCnt = od.CaseCnt
+	from RouteHeader rh
+		join RouteDetail rd on rd.TMSKey = rh.TMSKey
+		join BestRoute br on br.RouteNo = rh.RouteNo
+		join Orders o on o.TMSKey = rh.TMSKey 
+		join OrderDetail od on od.TMSKey = o.TMSKey and od.OrderLineNumber = rd.OrderLineNumber
+		join BaseCustomer bc on o.ConsigneeKey = bc.ConsigneeKey and o.StorerKey = bc.StorerKey
+		join BaseStorer bs on o.StorerKey = bs.StorerKey and o.Facility = bs.Facility
+		join BestLogWMS..Sku s on od.Sku = s.Sku and od.StorerKey = s.StorerKey
+		join BestLogWMS..OrderDetail ods on o.UpdateSource = ods.OrderKey and od.OrderLineNumber = ods.OrderLineNumber
+		--join #temporders t on o.TMSKey = t.TMSKey 
+	--where rh.RouteNo in ('F2009140002')
+	group by rtrim(o.StorerKey),rtrim(bs.ChineseName),rtrim(rh.RouteNo),convert(char(10),br.DoRouteDate,111),convert(char(10),o.DeliveryDate,111)
+		,rtrim(o.ExternOrderKey),rtrim(o.CustomerOrderKey),rtrim(o.OrderType),rtrim(bc.FullName),rtrim(o.ShipToAddress),rtrim(o.ConsigneeKey)
+		,rtrim(bc.Phone),rtrim(o.Notes),rtrim(br.Driver),rtrim(br.VehicleKey),rtrim(od.ExternLineNumber),rtrim(s.Susr3),rtrim(od.Descr)
+		,rtrim(ods.Lottable06),rtrim(s.Busr3),rtrim(s.Busr1),rtrim(o.ShortName),rtrim(o.Phone),rtrim(o.Contact),od.CaseCnt,rtrim(o.Tmskey),rtrim(od.Sku)
+	 </SqlCommand>
+      </STDShipList>
+    </DataSources>
+    <Relations isList="true" count="0" />
+    <Report isRef="0" />
+    <Resources isList="true" count="0" />
+    <Variables isList="true" count="0" />
+  </Dictionary>
+  <EngineVersion>EngineV2</EngineVersion>
+  <GlobalizationStrings isList="true" count="0" />
+  <Key>b4092760fbef4783b0664c3bbbfb5d28</Key>
+  <MetaTags isList="true" count="0" />
+  <Pages isList="true" count="1">
+    <Page1 Ref="4" type="Page" isKey="true">
+      <Border>None;Black;2;Solid;False;4;Black</Border>
+      <Brush>Transparent</Brush>
+      <Components isList="true" count="4">
+        <GroupHeaderBand1 Ref="5" type="GroupHeaderBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,0.4,22,3.8</ClientRectangle>
+          <Components isList="true" count="14">
+            <Text18 Ref="6" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.2,1.7,4.7,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>e8ea6ca9820d4a4f8d1fdfdc2fe0c2f4</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text18</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.RouteNo}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text18>
+            <Text19 Ref="7" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.2,2.4,5.4,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>99b7357a87264af18085ae585e16f8f3</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text19</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.FullName}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text19>
+            <Text20 Ref="8" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.2,2.8,12.8,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>b99bc3580e2d494181cc3c1c92a8fb13</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text20</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.Address}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text20>
+            <Text21 Ref="9" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.2,1.4,4.8,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>0ad47098ea224efb883063d855688091</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text21</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.StorerName}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text21>
+            <Text22 Ref="10" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>10,1.4,4.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>0936823153124ac8978615ae8b0763a5</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text22</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.ExternOrderKey}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text22>
+            <Text23 Ref="11" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.8,1.4,6.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,7</Font>
+              <Guid>17c030d047bd498aa9997288f04683be</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text23</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{Today}/{Time}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="12" type="DateFormat" isKey="true">
+                <StringFormat>g</StringFormat>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text23>
+            <Text24 Ref="13" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.8,1.75,3.1,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>097bc8af578a4451bb6e9ac6ff1e1e05</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text24</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.DoRouteDate}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text24>
+            <Text112 Ref="14" type="Text" isKey="true">
+              <Border>None;Black;2;Solid;False;4;Black</Border>
+              <Brush>Transparent</Brush>
+              <ClientRectangle>18,0.1,3.8,1</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,8</Font>
+              <Guid>ac6733d33719467caba4da2accfb21a6</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text112</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>第 {PageNumber} 頁/共 {TotalPageCount} 頁</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <TextQuality>Wysiwyg</TextQuality>
+              <Type>Expression</Type>
+            </Text112>
+            <Text1 Ref="15" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.8,2.05,3.3,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>57034d91d4b74fc68c90a0ef61d7d5e9</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text1</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.DeliveryDate}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text1>
+            <Text3 Ref="16" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.2,2.4,3.3,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>90eb02d4d1604c69b9b34aa93c668a80</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text3</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.VehicleKey}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text3>
+            <Text5 Ref="17" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>15.2,2.8,3.3,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>b38de8ece67a4426a6b3f3e1d1a9327a</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text5</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.Driver}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text5>
+            <Text6 Ref="18" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>10.2,1.75,4.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>376a1bae089f4ed98430e07d84f6631e</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text6</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.TmsKey}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text6>
+            <Text7 Ref="19" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>10,2.1,4.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>42149b9c440542558acfb582ff6f623f</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text7</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.CustomerOrderKey}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text7>
+            <Text8 Ref="20" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>10,2.45,4.2,0.5</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>6b4e6b98c0f942e28dab2d7cdfe6e316</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text8</Name>
+              <Page isRef="4" />
+              <Parent isRef="5" />
+              <Text>{STDShipList.Phone}</Text>
+              <TextBrush>Black</TextBrush>
+              <Type>Expression</Type>
+            </Text8>
+          </Components>
+          <Condition>{STDShipList.TmsKey}</Condition>
+          <Conditions isList="true" count="0" />
+          <Name>GroupHeaderBand1</Name>
+          <NewColumnBefore>True</NewColumnBefore>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <PrintOnAllPages>True</PrintOnAllPages>
+          <ResetPageNumber>True</ResetPageNumber>
+        </GroupHeaderBand1>
+        <DataBand1 Ref="21" type="DataBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <BusinessObjectGuid isNull="true" />
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,5,22,0.62</ClientRectangle>
+          <Components isList="true" count="5">
+            <Text12 Ref="22" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <CanGrow>True</CanGrow>
+              <ClientRectangle>1.5,0,3.8,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,8</Font>
+              <Guid>113390ddac5f4c05a8eb90dad788ecfe</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text12</Name>
+              <Page isRef="4" />
+              <Parent isRef="21" />
+              <Text>{STDShipList.Sku}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text12>
+            <Text13 Ref="23" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>5.2,0,9.5,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>f8a2995047dd4343be6bfb763664cf27</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text13</Name>
+              <Page isRef="4" />
+              <Parent isRef="21" />
+              <Text>{STDShipList.Descr}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="24" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text13>
+            <Text2 Ref="25" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>14.4,0,1.7,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>b2b1451df2ce415891d2d5f8476c4711</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text2</Name>
+              <Page isRef="4" />
+              <Parent isRef="21" />
+              <Text>{STDShipList.ShipCaseQty}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="26" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text2>
+            <Text4 Ref="27" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>16,0,1.3,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>93b8aee2863b4f9cb7ad48319a927dd1</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text4</Name>
+              <Page isRef="4" />
+              <Parent isRef="21" />
+              <Text>{STDShipList.ShipQty}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="28" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text4>
+            <Text9 Ref="29" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>17.4,0,1.7,0.4</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>bc10d692d5784257b6ff3e6816592638</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text9</Name>
+              <Page isRef="4" />
+              <Parent isRef="21" />
+              <Text>{STDShipList.TotalShipQty}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextFormat Ref="30" type="NumberFormat" isKey="true">
+                <DecimalDigits>2</DecimalDigits>
+                <GroupSeparator>,</GroupSeparator>
+                <NegativePattern>1</NegativePattern>
+                <UseLocalSetting>False</UseLocalSetting>
+              </TextFormat>
+              <Type>Expression</Type>
+              <VertAlignment>Center</VertAlignment>
+            </Text9>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <DataRelationName isNull="true" />
+          <DataSourceName>STDShipList</DataSourceName>
+          <Filters isList="true" count="0" />
+          <Name>DataBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <Sort isList="true" count="2">
+            <value>ASC</value>
+            <value>ExternLineNumber</value>
+          </Sort>
+        </DataBand1>
+        <EmptyBand1 Ref="31" type="Stimulsoft.Report.Components.StiEmptyBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <ClientRectangle>0,6.42,22,0.6</ClientRectangle>
+          <Components isList="true" count="0" />
+          <Conditions isList="true" count="0" />
+          <Name>EmptyBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+        </EmptyBand1>
+        <FooterBand1 Ref="32" type="FooterBand" isKey="true">
+          <Brush>Transparent</Brush>
+          <CanGrow>False</CanGrow>
+          <ClientRectangle>0,7.82,22,2</ClientRectangle>
+          <Components isList="true" count="1">
+            <Text10 Ref="33" type="Text" isKey="true">
+              <Brush>Transparent</Brush>
+              <ClientRectangle>1.4,0,8.6,0.9</ClientRectangle>
+              <Conditions isList="true" count="0" />
+              <Font>Arial Unicode MS,9</Font>
+              <Guid>d7eb4de475d94898b7f3613562095cb4</Guid>
+              <Margins>0,0,0,0</Margins>
+              <Name>Text10</Name>
+              <Page isRef="4" />
+              <Parent isRef="32" />
+              <Text>{IIF(Trim(STDShipList.Notes) == "", " ", Trim(STDShipList.Notes))}</Text>
+              <TextBrush>Black</TextBrush>
+              <TextOptions>,,,,WordWrap=True,A=0</TextOptions>
+              <Type>Expression</Type>
+            </Text10>
+          </Components>
+          <Conditions isList="true" count="0" />
+          <Name>FooterBand1</Name>
+          <Page isRef="4" />
+          <Parent isRef="4" />
+          <PrintAtBottom>True</PrintAtBottom>
+          <PrintOnAllPages>True</PrintOnAllPages>
+        </FooterBand1>
+      </Components>
+      <Conditions isList="true" count="0" />
+      <Guid>5f79660adeb24c449e5fcd01fc17e70b</Guid>
+      <LargeHeightFactor>1</LargeHeightFactor>
+      <Margins>1,1,1.1,0.5</Margins>
+      <Name>Page1</Name>
+      <PageHeight>14</PageHeight>
+      <PageWidth>24</PageWidth>
+      <PaperSize>Letter</PaperSize>
+      <PrintHeadersFootersFromPreviousPage>True</PrintHeadersFootersFromPreviousPage>
+      <Report isRef="0" />
+    </Page1>
+  </Pages>
+  <ReferencedAssemblies isList="true" count="8">
+    <value>System.Dll</value>
+    <value>System.Drawing.Dll</value>
+    <value>System.Windows.Forms.Dll</value>
+    <value>System.Data.Dll</value>
+    <value>System.Xml.Dll</value>
+    <value>Stimulsoft.Controls.Dll</value>
+    <value>Stimulsoft.Base.Dll</value>
+    <value>Stimulsoft.Report.Dll</value>
+  </ReferencedAssemblies>
+  <ReportAlias>Report</ReportAlias>
+  <ReportChanged>1/12/2021 1:54:35 PM</ReportChanged>
+  <ReportCreated>7/14/2020 2:53:04 PM</ReportCreated>
+  <ReportFile>C:\Users\terry\Desktop\TMS\Bootstrap.Client\Reports\STDShipList.mrt</ReportFile>
+  <ReportGuid>c83953a03c144be6b1fc182f71da550d</ReportGuid>
+  <ReportName>Report</ReportName>
+  <ReportUnit>Centimeters</ReportUnit>
+  <ReportVersion>2020.3.2.0</ReportVersion>
+  <Script>using System;
+using System.Drawing;
+using System.Windows.Forms;
+using System.Data;
+using Stimulsoft.Controls;
+using Stimulsoft.Base.Drawing;
+using Stimulsoft.Report;
+using Stimulsoft.Report.Dialogs;
+using Stimulsoft.Report.Components;
+
+namespace Reports
+{
+    public class Report : Stimulsoft.Report.StiReport
+    {
+        public Report()        {
+            this.InitializeComponent();
+        }
+
+        #region StiReport Designer generated code - do not modify
+		#endregion StiReport Designer generated code - do not modify
+    }
+}
+</Script>
+  <ScriptLanguage>CSharp</ScriptLanguage>
+  <Styles isList="true" count="0" />
+</StiSerializer>

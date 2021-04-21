@@ -1,0 +1,152 @@
+@model NormalModel
+@{
+ViewBag.Title = "回單檢核表";
+Layout = "_Bestlog";
+}
+@section css {
+}
+@section javascript {
+    <script src="~/js/reportsdnreturnlist.js" asp-append-version="true"></script>
+}
+
+<!--查詢-->
+@section query{
+<form class="form-inline">
+    <div class="row">
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_storerkey">貨主</label>
+            <select id="sel_storerkey" multiple="multiple">
+                <optgroup label="貨主">                    
+                    @foreach (var StorerKey in @Model.StorerKeys)
+                    {
+                        <option value="@StorerKey.Value">@string.Format("{0}　{1}", StorerKey.Value, StorerKey.Key)</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+        @* <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_RouteNo">路線編號</label>
+            <input type="text" class="form-control" id="txt_RouteNo" maxlength="15"  data-default-val="" />
+        </div>   *@
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_areacodes">區碼</label>
+            <select id="sel_areacodes" multiple="multiple">
+                <optgroup label="區碼">                    
+                    @foreach (var AreaCode in @Model.AreaCodes)
+                    {
+                        <option value="@AreaCode.Value">@string.Format("{0}　{1}", AreaCode.Value, AreaCode.Key)</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_TMSKey">訂單號碼</label>
+            <input type="text" class="form-control" id="txt_TMSKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="txt_ExternOrderKey">貨主單號</label>
+            <input type="text" class="form-control" id="txt_ExternOrderKey" maxlength="60" data-default-val="" />
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_company">貨運公司</label>
+            <select id="sel_company" multiple="multiple">
+                <optgroup label="貨運公司">                    
+                    @foreach (var Company in @Model.Companies)
+                    {
+                        <option value="@Company.Value">@string.Format("{0}　{1}", Company.Value, Company.Key)</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_ordertypes">訂單類別</label>
+            <select id="sel_ordertypes" multiple="multiple">
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_facility">配送倉別</label>
+            <select id="sel_facility" multiple="multiple">
+                <optgroup label="倉別">                    
+                    @foreach (var Facility in @Model.Facilities)
+                    {
+                        <option value="@Facility.Value">@Facility.Key</option>
+                    }                
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="sel_orderstatus">簽單狀態</label>
+            <select id="sel_orderstatus" multiple="multiple">
+                <optgroup label="簽單狀態">
+                    <option value="4">未維護</option>
+                    <option value="5">正常訂單</option>
+                    <option value="6">異常訂單</option>
+                    <option value="7">未出訂單</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="form-group col-sm-auto">
+            <label class="control-label" for="ordermethod">排序方式</label>
+            <input class="form-control" data-toggle="lgbSelect" readonly="true" />
+            <select id="ordermethod" data-toggle="lgbSelect" class="d-none" data-default-val="" >
+                <option value="0">系統預設</option>
+                <option value="1">維護人,維護時間</option>
+                <option value="2">貨主單號</option>
+                <option value="3">通路別,客戶簡稱</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DeliveryDateS">到貨時間(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDateS" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_DeliveryDateE">到貨時間(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_DeliveryDateE" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_ConfirmDateS">維護日期(起)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_ConfirmDateS" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+        <div class="form-group col-sm-6 col-lg-auto">
+            <label class="control-label" for="txt_ConfirmDateE">維護日期(訖)</label>
+            <div class="input-group input-append datepicker">
+                <input id="txt_ConfirmDateE" class="form-control" size="16" type="text" value="" readonly
+                    data-default-val="">
+            </div>
+        </div>
+    </div>
+</form>
+}
+@section gear{
+<a id="tb_export" href="#" title="匯出資料" asp-auth="Export"><i class="fa fa-download"></i></a>
+}
+@section toolbar{
+<button id="btn_export" type="button" class="btn btn-warning" asp-auth="Export"><i class="fa fa-download"
+        aria-hidden="true"></i><span>匯出資料</span></button>
+}
+@section card{
+<div class="card">
+    <div class="card-header">
+        回單簽核表
+    </div>
+    <div class="card-body">
+        <table id="reportsdnreturnlist-table"></table>
+    </div>
+</div>
+}
+@section tableButtons{
+
+}

@@ -1,0 +1,117 @@
+@model NormalModel
+@{
+    Layout = "_Bestlog";
+}
+@section css {
+    <style>
+        #modalbodycard .card {
+            display: none;
+        }
+    </style>
+    @RenderSection("css", false)
+}
+@section javascript {
+    <script src="~/js/normal.js" asp-append-version="true"></script>
+    <script src="~/lib/FileSaver/FileSaver.min.js" asp-append-version="true"></script>
+    @RenderSection("javascript", false)
+}
+@section modal {
+    <div class="modal fade" id="dialogNew" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">@RenderSection("modalheadertitle", false)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div id="modalbodycard" class="modal-body">
+                    <div class="card" id="headerCard" data-toggle="LgbValidate" data-valid-button="#nextBtn" data-valid-modal="#dialogNew">
+                        <div class="card-header">
+                            @RenderSection("headerCardTitle", false)
+                        </div>
+                        <div class="card-body">
+                            @RenderSection("headerCardBody", false)
+                            <form class="form-inline">
+                                <div class="row">
+                                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                                        <button type="button" class="normal-nextbtn btn btn-primary" id="nextBtn">
+                                            <i class="fa fa-arrow-right"></i>
+                                            <span>下一步</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    @RenderSection("normalCard", false)
+                    <div class="card" id="detailCard" data-toggle="LgbValidate" data-valid-button=".valid-detail-button" data-valid-modal="#dialogNew">
+                        <div class="card-header">
+                            @RenderSection("detailCardTitle", false)
+                        </div>
+                        <div class="card-body">
+                            @RenderSection("detailCardBody", false)
+                            <form class="form-inline">
+                                <div class="row">
+                                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                                        <button type="button" id="btn_AddDetail" class="btn btn-primary btn-fill valid-detail-button">
+                                            <i class="fa fa-plus" aria-hidden="true"></i><span>新增</span></button>
+                                    </div>
+                                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                                        <button type="button" id="btn_CancelUpdate" class="btn btn-secondary btn-fill">
+                                            <i class="fa fa-times" aria-hidden="true"></i><span>取消</span></button>
+                                        <button type="button" id="btn_UpdateDetail" class="btn btn-success btn-fill ml-3 valid-detail-button">
+                                            <i class="fa fa-save" aria-hidden="true"></i><span>保存</span></button>
+                                    </div>
+                                </div>
+                            </form>
+                            <label>明細</label>
+                            <table id="NormalDetail-table"></table>
+                            @RenderSection("detailTable", false)                            
+                            <form class="form-inline">
+                                <div class="row">
+                                    <div class="form-group col-sm-auto flex-sm-fill justify-content-sm-end align-self-sm-end">
+                                        <button type="button" class="normal-prevbtn btn btn-secondary">
+                                            <i class="fa fa-arrow-left"></i>
+                                            <span>上一步</span>
+                                        </button>
+                                        <button type="button" class="btn btn-primary ml-3" id="submitBtn">
+                                            <i class="fa fa-save"></i>
+                                            <span>提交</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="detailtableButtons" class="d-none">
+        <div class='btn-group'>
+            <button class='edit btn btn-sm btn-success' asp-auth="edit"><i class='fa fa-edit'></i><span>編輯</span></button>
+            <button class='del btn btn-sm btn-danger' asp-auth="del"><i class='fa fa-remove'></i><span>刪除</span></button>
+        </div>
+    </div> 
+    @RenderSection("modal", false)
+}
+@section query{ 
+    @RenderSection("query", false)
+}
+@section gear{
+    @RenderSection("gear", false)
+}
+@section toolbar{
+     @RenderSection("toolbar", false)        
+}
+@section customtoolbar {
+    @RenderSection("customtoolbar", false)
+}
+@section card{    
+    @RenderSection("card", false)
+}
+@section tableButtons{      
+    @RenderSection("tableButtons", false)
+}
+@section customTableButtons {
+    @RenderSection("customTableButtons", false)
+}

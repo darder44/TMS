@@ -1,0 +1,195 @@
+@model NavigatorBarModel
+@{
+    Layout = "_Admin";
+}
+@section css {
+    <environment include="Development">
+        <link href="~/lib/bootstrap-table/bootstrap-table.css" rel="stylesheet" asp-append-version="true"/>        
+        <link href="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/bootstrap-table/extensions/page-jump-to/bootstrap-table-page-jump-to.css" rel="stylesheet" asp-append-version="true"/>
+    </environment>
+    <environment exclude="Development">
+        <link href="~/lib/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.css" rel="stylesheet" asp-append-version="true"/>
+        <link href="~/lib/bootstrap-table/extensions/page-jump-to/bootstrap-table-page-jump-to.min.css" rel="stylesheet" asp-append-version="true"/>
+    </environment>    
+    <link href="~/lib/dragtable/dragtable.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/lib/longbow-checkbox/longbow-checkbox.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/lib/longbow-select/longbow-select.css" rel="stylesheet" asp-append-version="true"/> <!--需使用下拉選單套用的樣式-->
+    <link href="~/lib/bootstrap-toggle/css/bootstrap-toggle.css" rel="stylesheet" asp-append-version="true"/> <!--需使用開關按鈕套用的樣式-->
+    <link href="~/lib/datetimepicker/css//bootstrap-datetimepicker.css" rel="stylesheet" asp-append-version="true"/>
+    <link href="~/lib/bootstrap-multiselect/bootstrap-multiselect.css" rel="stylesheet" asp-append-version="true"/>
+    <style>
+        table {
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .datepicker > input,
+        .timepicker > input {
+            cursor: pointer;
+        }
+
+        .modal-body.modal-query {
+            overflow: visible;
+        }
+
+        .typeahead.dropdown-menu {
+            z-index: 1050;  
+        }
+
+        /*
+            修正下拉選單寬度        
+        */
+        .form-select .dropdown-menu { 
+            width: auto;
+        }
+
+        .multiselect {
+            text-align: left;
+        }
+
+        .multiselect-container {
+            width: 100%;
+            z-index: 1050;
+        }
+
+            .multiselect-container li a label {
+                display: inline-block;
+                position: relative;
+                vertical-align: middle;
+                text-align: left;
+                z-index: 1050;
+            }
+
+        .input-group.input-append.datepicker > div {
+            display: flex !important;
+        }
+
+        .input-group.input-append.datepicker > input {
+            padding-right: 12px;
+        }
+
+        .modal:not(#dialogAdvancedSearch):not([aria-labelledby="mySearchModalLabel"]) .modal-dialog {
+            max-width: 90% !important;
+        }
+
+        .modal:not(#dialogAdvancedSearch):not([aria-labelledby="mySearchModalLabel"]) .modal-dialog .modal-body .tab-content .tab-content-item {
+            height: calc(100vh - 256px);
+            overflow-y: auto;
+        }
+        
+        .modal input.form-control {
+            font-size: 0.87rem !important;
+            height: calc(1.25em + 0.75rem + 2px) !important;
+        }
+
+        [data-toggle="LgbValidate"] input[type="text"], [data-toggle="LgbValidate"] input[type="password"] {
+            padding-right: 12px !important;
+        }        
+
+    </style>
+    @RenderSection("css", false)
+}
+@section javascript {
+    <environment include="Development">
+        <script src="~/lib/bootstrap-table/bootstrap-table.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-TW.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/export/bootstrap-table-export.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/page-jump-to/bootstrap-table-page-jump-to.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/cookie/bootstrap-table-cookie.js" asp-append-version="true" ></script>
+        <script src="~/lib/bootstrap-table/extensions/reorder-columns/bootstrap-table-reorder-columns.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/resizable/bootstrap-table-resizable.js" asp-append-version="true"></script>        
+        <script src="~/lib/validate/jquery.validate.js"></script>
+        <script src="~/lib/validate/localization/messages_zh.js"></script>
+        <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/bootstrap-table/bootstrap-table.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/locale/bootstrap-table-zh-TW.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/export/bootstrap-table-export.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/page-jump-to/bootstrap-table-page-jump-to.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/cookie/bootstrap-table-cookie.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/reorder-columns/bootstrap-table-reorder-columns.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-table/extensions/resizable/bootstrap-table-resizable.min.js" asp-append-version="true"></script>   
+        <script src="~/lib/validate/jquery.validate.min.js" asp-append-version="true"></script>
+        <script src="~/lib/validate/localization/messages_zh.min.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-3-typeahead/bootstrap3-typeahead.min.js" asp-append-version="true"></script>
+    </environment>                
+    <script src="~/lib/longbow-checkbox/longbow-checkbox.js" asp-append-version="true"></script>
+    <script src="~/lib/longbow/longbow.dataentity.js" asp-append-version="true"></script>
+    <script src="~/lib/longbow/longbow.validate.js" asp-append-version="true"></script>
+    <script src="~/lib/datetimepicker/js/bootstrap-datetimepicker.js" asp-append-version="true"></script>
+    <script src="~/lib/datetimepicker/js/locales/bootstrap-datetimepicker.zh-TW.js" asp-append-version="true"></script>           
+    <script src="~/lib/js-xlsx/xlsx.full.min.js" asp-append-version="true"></script>     
+    <script src="~/lib/js-blob/blob.js" asp-append-version="true"></script>     
+    <script src="~/lib/FileSaver/FileSaver.min.js" asp-append-version="true"></script>
+    <script src="~/lib/tablexport/tableExport_MultipleTabs.js" asp-append-version="true"></script>
+    <script src="~/lib/longbow-select/longbow-select.js" asp-append-version="true"></script> <!--需使用下拉選單套用的樣式-->
+    <script src="~/lib/bootstrap-toggle/js/bootstrap-toggle.js" asp-append-version="true"></script> <!--需使用開關按鈕套用的樣式-->
+    <script src="~/js/export-report.js" asp-append-version="true"></script>
+    <script src="~/js/bestlog.common.js" asp-append-version="true"></script>
+    <script src="~/lib/MomentJS/moment.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap-multiselect/bootstrap-multiselect.js" asp-append-version="true"></script>
+    @RenderSection("javascript", false)
+}
+@section modal {
+    <div class="modal fade" id="dialogAdvancedSearch" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="mySearchModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document" data-toggle="LgbValidate" data-valid-button="#btn_query" data-valid-modal="#dialogAdvancedSearch">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mySearchModalLabel">查詢條件</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body modal-query">
+                    @RenderSection("query", false)
+                    <form class="form-inline" asp-condition="false">
+                        <div class="row">
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="MatchCase">區分大小寫</label>
+                                <input id="MatchCase" hidden type="checkbox" data-default-val="false" data-toggle="toggle" data-onstyle="success" data-on="是" data-off="否" />
+                            </div>
+                            <div class="form-group col-sm-auto">
+                                <label class="control-label" for="MatchWholeWord">全字匹配</label>
+                                <input id="MatchWholeWord" hidden type="checkbox" data-default-val="false" data-toggle="toggle" data-onstyle="success" data-on="是" data-off="否" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btn_reset" class="btn btn-info btn-fill"><i class="fa fa-trash-o" aria-hidden="true"></i><span>重置</span></button>
+                    <button type="button" id="btn_query" class="btn btn-primary btn-fill"><i class="fa fa-search" aria-hidden="true"></i><span>查詢</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderSection("modal", false)
+    @RenderSection("customModal", false)
+}
+<div id="toolbar" class="d-none">
+    <div class="gear btn-group">
+        <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button"><i class="fa fa-gear"></i></button>
+        <div class="dropdown-menu">
+            @await RenderSectionAsync("gear", false)
+        </div>
+    </div>
+    <div class="toolbar btn-group">
+        @RenderSection("toolbar", false)
+    </div>
+    <div class="btn-group">
+        @RenderSection("toolbarbtngroup", false)
+    </div>
+</div>
+@RenderSection("customToolbar", false)
+@RenderSection("card", false)
+
+<div id="tableButtons" class="d-none">
+    <div class='btn-group'>
+        @RenderSection("tableButtons", false)
+    </div>
+</div>
+@RenderSection("customTableButtons", false)
+@await RenderSectionAsync("body", false)
